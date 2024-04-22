@@ -87,7 +87,49 @@ function Expenses() {
     return merged;
   };
 
-  function AddExpenses(category, amount) {
+  function AddExpenses(category, amount, usecallback) {
+    if (budget === 0) {
+      notifyFalse("💵 Budget is null");
+    } else {
+      if (category === "") {
+        notifyFalse("🚫 Empty category detected!");
+      } else if (amount === "") {
+        notifyFalse("🚫 Empty amount detected!");
+      } else if (amount < 0) {
+        notifyFalse("🚫 Amount should be positive");
+      } else {
+        const currentDate = new Date();
+        const categoryIndex = catData.findIndex((cat) => cat === category);
+        if (categoryIndex !== -1) {
+          setAmoData((prevAmoData) => {
+            const newAmoData = [...prevAmoData];
+            newAmoData[categoryIndex] = (
+              parseInt(newAmoData[categoryIndex]) + parseInt(amount)
+            ).toString();
+            return newAmoData;
+          });
+          setDateCreated((prevDateCreated) => {
+            const newDateCreated = [...prevDateCreated];
+            newDateCreated[categoryIndex] = currentDate;
+            return newDateCreated;
+          });
+        } else {
+          setCatData((prevCatData) => [...prevCatData, category]);
+          setAmoData((prevAmoData) => [...prevAmoData, amount]);
+          setDateCreated((prevDateCreated) => [
+            ...prevDateCreated,
+            currentDate,
+          ]);
+        }
+        setCategory("");
+        setAmount("");
+        notifyTrue("💵 Wallet-friendly vibes! Another entry safely recorded.");
+      }
+    }
+    usecallback();
+  }
+
+  function callBackFunction() {
     if (budget === 0) {
       notifyFalse("💵 Budget is null");
     } else {
@@ -221,7 +263,7 @@ function Expenses() {
                 <div className="expenseAdd">
                   <button
                     onClick={() => {
-                      AddExpenses(category, amount);
+                      AddExpenses(category, amount, callBackFunction);
                       setAmount("");
                     }}
                     className="addExpenseBtn"
