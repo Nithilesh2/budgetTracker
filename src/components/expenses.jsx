@@ -18,12 +18,8 @@ function Expenses() {
   const [remaining, setRemaining] = useState(0);
   const [catData, setCatData] = useState([]);
   const [amoData, setAmoData] = useState([]);
-  // const [dateCreated, setDateCreated] = useState(() => {
-  //   const savedDateCreated = localStorage.getItem("DateCreated");
-  //   return savedDateCreated ? JSON.parse(savedDateCreated) : [];
-  // });
-  const [dateCreated, setDateCreated] = useState([]);
 
+  const [dateCreated, setDateCreated] = useState([]);
   const [merge, setMerge] = useState({});
 
   const initializeMergeState = () => {
@@ -87,7 +83,7 @@ function Expenses() {
     return merged;
   };
 
-  function AddExpenses(category, amount, usecallback) {
+  function AddExpenses(category, amount) {
     if (budget === 0) {
       notifyFalse("💵 Budget is null");
     } else {
@@ -114,7 +110,10 @@ function Expenses() {
             return newDateCreated;
           });
         } else {
-          setCatData((prevCatData) => [...prevCatData, category]);
+          setCatData((prevCatData) => [
+            ...prevCatData,
+            firstCharUppercase(category),
+          ]);
           setAmoData((prevAmoData) => [...prevAmoData, amount]);
           setDateCreated((prevDateCreated) => [
             ...prevDateCreated,
@@ -126,11 +125,17 @@ function Expenses() {
         notifyTrue("💵 Wallet-friendly vibes! Another entry safely recorded.");
       }
     }
-    usecallback();
   }
 
-  function callBackFunction() {
-    AddExpenses();
+  function enterKey(eve) {
+    if (eve.key === "Enter") {
+      if (eve.target.id === "category") {
+        document.getElementById("amount").focus();
+      } else if (eve.target.id === "amount") {
+        AddExpenses(category, amount);
+        document.getElementById("category").focus();
+      }
+    }
   }
 
   const deleteItem = (itemName) => {
@@ -182,6 +187,14 @@ function Expenses() {
     if (!/^[A-Za-z\s]+$/.test(keyValue)) {
       event.preventDefault();
     }
+    if (event.key === "Enter") {
+      if (event.target.id === "category") {
+        document.getElementById("amount").focus();
+      } else if (event.target.id === "amount") {
+        AddExpenses(category, amount);
+        document.getElementById("category").focus();
+      }
+    }
   };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -195,6 +208,15 @@ function Expenses() {
     };
     return date.toLocaleString("en-IN", options);
   };
+
+  function firstCharUppercase(data) {
+    let str = "";
+    let value = data;
+    for (var i = 1; i < value.length; i++) {
+      str = str + value.charAt(i).toLowerCase();
+    }
+    return value.charAt(0).toUpperCase() + str;
+  }
 
   return (
     <>
@@ -221,12 +243,13 @@ function Expenses() {
                     value={amount}
                     type="number"
                     placeholder="Amount"
+                    onKeyPress={enterKey}
                   />
                 </div>
                 <div className="expenseAdd">
                   <button
                     onClick={() => {
-                      AddExpenses(category, amount, callBackFunction);
+                      AddExpenses(category, amount);
                       setAmount("");
                     }}
                     className="addExpenseBtn"
