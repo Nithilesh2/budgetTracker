@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AppContext from "./AppContext";
+import { jwtDecode } from "jwt-decode";
 
 const AppStore = (props) => {
   const notifyFalse = (val) => {
@@ -15,6 +16,7 @@ const AppStore = (props) => {
   const [remaining, setRemaining] = useState(0);
   const [catData, setCatData] = useState([]);
   const [amoData, setAmoData] = useState([]);
+  const [decoded, setDecoded] = useState("");
   const [merge, setMerge] = useState({});
   const [dateCreated, setDateCreated] = useState([]);
 
@@ -171,6 +173,16 @@ const AppStore = (props) => {
     }
   };
 
+  function loginClicked(credentialResponse) {
+    try {
+      let name = jwtDecode(credentialResponse.credential).name;
+      setDecoded(name);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  // console.log(decoded);
+
   return (
     <AppContext.Provider
       value={{
@@ -194,6 +206,9 @@ const AppStore = (props) => {
         deleteItem,
         handleKeyPress,
         changeBudget,
+        decoded,
+        setDecoded,
+        loginClicked,
       }}
     >
       {props.children}

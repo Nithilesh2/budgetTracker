@@ -4,12 +4,10 @@ import "../css/dashboard.css";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import AppContext from "../context/AppContext";
-import { useLocation } from "react-router-dom";
 
 function Dashboard() {
-  const { catData, amoData, budget } = useContext(AppContext);
-  const location = useLocation();
-  const { name } = location.state;
+  const { catData, amoData, budget, decoded } = useContext(AppContext);
+  // console.log(decoded);
 
   const userData = {
     labels: catData,
@@ -48,7 +46,7 @@ function Dashboard() {
       <main className="mainDashboard">
         <Navbar />
         <div className="totalData">
-          <h1 className="greetings">Welcome back, {name}</h1>
+          <h1 className="greetings">Welcome back {decoded}</h1>
           <div className="barChart">
             <div className="bar1">
               <Bar
