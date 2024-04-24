@@ -17,6 +17,7 @@ const AppStore = (props) => {
   const [catData, setCatData] = useState([]);
   const [amoData, setAmoData] = useState([]);
   const [decoded, setDecoded] = useState("");
+  const [decodedName, setDecodedName] = useState("");
   const [merge, setMerge] = useState({});
   const [dateCreated, setDateCreated] = useState([]);
 
@@ -174,14 +175,17 @@ const AppStore = (props) => {
   };
 
   function loginClicked(credentialResponse) {
-    try {
-      let name = jwtDecode(credentialResponse.credential).name;
-      setDecoded(name);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    let decode = jwtDecode(credentialResponse.credential);
+    let userName = decode.name;
+    setDecoded(userName);
   }
-  // console.log(decoded);
+
+  useEffect(() => {
+    setDecodedName(decoded);
+    if (decodedName) {
+      setDecoded((decodedName) => decodedName);
+    }
+  }, [decoded, decodedName]);
 
   return (
     <AppContext.Provider

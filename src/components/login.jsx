@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
-// import AppContext from "../context/AppContext";
+import React, { useEffect, useState, useRef } from "react";
+import AppContext from "../context/AppContext";
 import "../css/login.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [decodedName, setDecodedName] = useState("");
   const [decoded, setDecoded] = useState("");
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
@@ -14,22 +16,33 @@ export default function Login() {
     setShow(!show);
   };
 
-  useEffect(() => {
-    if (decoded) {
+  const buttonClicked = () => {
+    if (emailRef.current.value !== "test@gmail.com") {
+      alert("Use mail => test@gmail.com");
+    } else if (passwordRef.current.value !== "123") {
+      alert("Use password => 123");
+    } else {
       navigate("/dashboard");
     }
-  }, [decoded, navigate]);
-
+  };
   function loginClicked(credentialResponse) {
-    let name = jwtDecode(credentialResponse.credential).name;
-    let n = name;
-    setDecoded(n);
+    let decode = jwtDecode(credentialResponse.credential);
+    var userName = decode.name;
+    setDecoded(userName);
   }
-  // console.log(decoded);
+  useEffect(() => {
+    setDecodedName(decoded);
+    if (decodedName) {
+      setDecoded((decodedName) => decodedName);
+      navigate("/dashboard");
+    }
+  }, [decoded, navigate, decodedName]);
 
   return (
     <>
-      {/* <AppContext.Provider value={{ decoded, setDecoded }}> */}
+      <AppContext.Provider
+        value={{ decoded, setDecoded, decodedName, setDecodedName }}
+      >
         <main className="main">
           <div className="loginbox">
             <form className="form">
@@ -41,6 +54,7 @@ export default function Login() {
                   className="e_mail"
                   placeholder="Enter mail"
                   required
+                  ref={emailRef}
                 />
               </div>
               <div className="pas">
@@ -50,6 +64,7 @@ export default function Login() {
                   className="pass"
                   placeholder="Enter password"
                   required
+                  ref={passwordRef}
                 />
                 <span className="show">
                   <i
@@ -62,7 +77,7 @@ export default function Login() {
                 </span>
               </div>
               <button
-                onClick={() => navigate("/dashboard")}
+                onClick={() => buttonClicked()}
                 type="submit"
                 className="btn"
               >
@@ -96,7 +111,7 @@ export default function Login() {
             </form>
           </div>
         </main>
-      {/* </AppContext.Provider> */}
+      </AppContext.Provider>
     </>
   );
 }
