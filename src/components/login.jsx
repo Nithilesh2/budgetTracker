@@ -1,39 +1,15 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import AppContext from "../context/AppContext";
 import "../css/login.css";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
-  // const emailRef = useRef();
-  // const passwordRef = useRef();
-  // const [decodedName, setDecodedName] = useState("");
-  // const [decoded, setDecoded] = useState("");
-  // const [show, setShow] = useState(false);
-  // const navigate = useNavigate();
-  // const toggleButton = () => {
-  //   setShow(!show);
-  // };
-
-  // const buttonClicked = () => {
-  //   if (emailRef.current.value !== "test@gmail.com") {
-  //     alert("Use mail => test@gmail.com");
-  //   } else if (passwordRef.current.value !== "123") {
-  //     alert("Use password => 123");
-  //   } else {
-  //     navigate("/dashboard");
-  //   }
-  // };
-  // function loginClicked(credentialResponse) {
-  //   let decode = jwtDecode(credentialResponse.credential);
-  //   var userName = decode.name;
-  //   setDecoded(userName);
-  // }
+  const emailRef = useRef();
+  const passwordRef = useRef();
 
   const {
     loginClicked,
-    emailRef,
-    passwordRef,
     notifyRed,
     decoded,
     show,
@@ -45,6 +21,7 @@ export default function Login() {
   const submitBtnClicked = () => {
     const email = emailRef.current.value
     const password = passwordRef.current.value
+    alert(email)
     if (email === "test@gmail.com") {
       if (password === "123") {
         navigate("/dashboard")
@@ -66,7 +43,6 @@ export default function Login() {
 
   return (
     <>
-
         <main className="main">
           <div className="loginbox">
             <form className="form">
