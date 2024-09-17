@@ -149,6 +149,19 @@ const AppStore = (props) => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      month: "numeric",
+      day: "numeric",
+      year: "2-digit",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false,
+    };
+    return date.toLocaleString("en-IN", options);
+  };
+
   function changeBudget() {
     const changebudget = parseInt(prompt("Enter budget here: ", 5000));
     if (changebudget < 0) {
@@ -166,18 +179,37 @@ const AppStore = (props) => {
   }
 
   const handleKeyPress = (event) => {
-    setCategory(event.target.value);
-    const keyCode = event.keyCode || event.which;
-    const keyValue = String.fromCharCode(keyCode);
+    setCategory(event.target.value)
+    const keyCode = event.keyCode || event.which
+    const keyValue = String.fromCharCode(keyCode)
     if (!/^[A-Za-z\s]+$/.test(keyValue)) {
-      event.preventDefault();
+      event.preventDefault()
     }
-  };
+    if (event.key === "Enter") {
+      if (event.target.id === "category") {
+        document.getElementById("amount").focus()
+      } else if (event.target.id === "amount") {
+        AddExpenses(category, amount)
+        document.getElementById("category").focus()
+      }
+    }
+  }
 
   function loginClicked(credentialResponse) {
     let decode = jwtDecode(credentialResponse.credential);
     let userName = decode.name;
     setDecoded(userName);
+  }
+
+  function enterKey(eve) {
+    if (eve.key === "Enter") {
+      if (eve.target.id === "category") {
+        document.getElementById("amount").focus()
+      } else if (eve.target.id === "amount") {
+        AddExpenses(category, amount)
+        document.getElementById("category").focus()
+      }
+    }
   }
 
   useEffect(() => {
@@ -213,6 +245,7 @@ const AppStore = (props) => {
         decoded,
         setDecoded,
         loginClicked,
+        formatDate,enterKey
       }}
     >
       {props.children}

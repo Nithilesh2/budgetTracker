@@ -1,48 +1,72 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import AppContext from "../context/AppContext";
 import "../css/login.css";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const [decodedName, setDecodedName] = useState("");
-  const [decoded, setDecoded] = useState("");
-  const [show, setShow] = useState(false);
-  const navigate = useNavigate();
-  const toggleButton = () => {
-    setShow(!show);
-  };
+  // const emailRef = useRef();
+  // const passwordRef = useRef();
+  // const [decodedName, setDecodedName] = useState("");
+  // const [decoded, setDecoded] = useState("");
+  // const [show, setShow] = useState(false);
+  // const navigate = useNavigate();
+  // const toggleButton = () => {
+  //   setShow(!show);
+  // };
 
-  const buttonClicked = () => {
-    if (emailRef.current.value !== "test@gmail.com") {
-      alert("Use mail => test@gmail.com");
-    } else if (passwordRef.current.value !== "123") {
-      alert("Use password => 123");
+  // const buttonClicked = () => {
+  //   if (emailRef.current.value !== "test@gmail.com") {
+  //     alert("Use mail => test@gmail.com");
+  //   } else if (passwordRef.current.value !== "123") {
+  //     alert("Use password => 123");
+  //   } else {
+  //     navigate("/dashboard");
+  //   }
+  // };
+  // function loginClicked(credentialResponse) {
+  //   let decode = jwtDecode(credentialResponse.credential);
+  //   var userName = decode.name;
+  //   setDecoded(userName);
+  // }
+
+  const {
+    loginClicked,
+    emailRef,
+    passwordRef,
+    notifyRed,
+    decoded,
+    show,
+    toggleButton,
+  } = useContext(AppContext)
+
+  const navigate = useNavigate()
+
+  const submitBtnClicked = () => {
+    const email = emailRef.current.value
+    const password = passwordRef.current.value
+    if (email === "test@gmail.com") {
+      if (password === "123") {
+        navigate("/dashboard")
+      } else {
+        notifyRed("Password mismatch! use '123'.")
+        passwordRef.current.value = ""
+      }
     } else {
-      navigate("/dashboard");
+      notifyRed("Uh-oh, use mail as 'test@gmail.com'")
+      emailRef.current.value = ""
+      passwordRef.current.value = ""
     }
-  };
-  function loginClicked(credentialResponse) {
-    let decode = jwtDecode(credentialResponse.credential);
-    var userName = decode.name;
-    setDecoded(userName);
   }
   useEffect(() => {
-    setDecodedName(decoded);
-    if (decodedName) {
-      setDecoded((decodedName) => decodedName);
+    if (decoded) {
       navigate("/dashboard");
     }
-  }, [decoded, navigate, decodedName]);
+  }, [decoded, navigate]);
 
   return (
     <>
-      <AppContext.Provider
-        value={{ decoded, setDecoded, decodedName, setDecodedName }}
-      >
+
         <main className="main">
           <div className="loginbox">
             <form className="form">
@@ -76,13 +100,9 @@ export default function Login() {
                   ></i>
                 </span>
               </div>
-              <button
-                onClick={() => buttonClicked()}
-                type="submit"
-                className="btn"
-              >
-                SignIn
-              </button>
+              <button type="submit" className="btn" onClick={submitBtnClicked}>
+              SignIn
+            </button>
 
               <div className="forgotPass">Forgot password?</div>
               <div className="or">
@@ -111,7 +131,6 @@ export default function Login() {
             </form>
           </div>
         </main>
-      </AppContext.Provider>
     </>
   );
 }
