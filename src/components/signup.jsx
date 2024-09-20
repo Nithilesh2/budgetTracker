@@ -90,7 +90,6 @@ export default function SignUp() {
         } catch (error) {
           console.error("Error",error)
           notifyRed("Error signing up, please try again.");
-          notifyRed(error);
         }
         // finally{
         //   notifyGreen(
