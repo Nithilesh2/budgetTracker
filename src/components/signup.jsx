@@ -5,6 +5,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios"
 
 export default function SignUp() {
   const notifyGreen = (val) => toast.success(`${val}`);
@@ -52,7 +53,8 @@ export default function SignUp() {
       roundColor.style.color = "green";
     }
   };
-  const signupbtnClicked = () => {
+  const signupbtnClicked = async(event) => {
+    event.preventDefault();
     if (email === "") {
       notifyRed("Email is empty");
     } else if (pass === 0) {
@@ -69,9 +71,33 @@ export default function SignUp() {
       } else if (!passRegex.test(confirmPass)) {
         notifyYellow("Not Strong Confirm password");
       } else {
-        notifyGreen(
-          "Got your credentials🥳 Bingo! You're now part of the family. Cheers! 🥂"
-        );
+        try {
+          const response = await axios.post("https://budgetplanner-backend-1.onrender.com/signup",{
+            email,
+            password: pass,
+            RePassword: confirmPass
+          },{
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          notifyGreen(response.data.message || "User registered successfully!");
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+          
+        } catch (error) {
+          console.error("Error",error)
+          notifyRed("Error signing up, please try again.");
+          notifyRed(error);
+        }
+        // finally{
+        //   notifyGreen(
+        //     "Got your credentials🥳 Bingo! You're now part of the family. Cheers! 🥂"
+        //   );
+        //   navigate('/');
+        // }
       }
     }
   };
