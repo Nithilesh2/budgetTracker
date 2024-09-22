@@ -6,7 +6,8 @@ import "chart.js/auto"
 import AppContext from "../context/AppContext"
 
 function Dashboard() {
-  const { catData, amoData, budget, decoded } = useContext(AppContext)
+  const { catData, amoData, budget } = useContext(AppContext)
+  const userName = localStorage.getItem("userName")
 
   const userData = {
     labels: catData,
@@ -46,10 +47,7 @@ function Dashboard() {
         <Navbar />
         <div className="totalData">
           <h1 className="greetings">
-            
-            {decoded
-              ? `Welcome back, ${decoded}`
-              : "Welcome back, User"}
+            {userName ? `Welcome back, ${userName}` : "Welcome back, User"}
           </h1>
           <div className="barChart">
             <div className="bar1">

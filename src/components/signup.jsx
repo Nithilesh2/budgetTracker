@@ -1,111 +1,130 @@
-import React, { useState } from "react";
-import "../css/signup.css";
-import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState } from "react"
+import "../css/signup.css"
+import { useNavigate } from "react-router-dom"
+import { GoogleLogin } from "@react-oauth/google"
+import { jwtDecode } from "jwt-decode"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
+import ClipLoader from "react-spinners/ClipLoader"
 
 export default function SignUp() {
-  const notifyGreen = (val) => toast.success(`${val}`);
-  const notifyYellow = (val) => toast.warn(`${val}`);
+  const notifyGreen = (val) => toast.success(`${val}`)
+  const notifyYellow = (val) => toast.warn(`${val}`)
   const notifyRed = (val) => {
-    toast.error(`${val}`);
-  };
-  const navigate = useNavigate();
-  const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{7,}$/;
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$/;
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState(0);
-  const [confirmPass, setConfirmPass] = useState(0);
+    toast.error(`${val}`)
+  }
+  const navigate = useNavigate()
+  const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{7,}$/
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$/
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [pass, setPass] = useState(0)
+  const [confirmPass, setConfirmPass] = useState(0)
+  const [loading, setLoading] = useState(false)
 
+  const nameChanging = (eve) => {
+    setName(eve.target.value)
+  }
   const emailChanging = (eve) => {
-    const roundColor = document.querySelector(".checkmail");
-    setEmail(eve.target.value);
+    const roundColor = document.querySelector(".checkmail")
+    setEmail(eve.target.value)
     if (eve.target.value === "") {
-      roundColor.style.color = "grey";
+      roundColor.style.color = "grey"
     } else if (!emailRegex.test(email)) {
-      roundColor.style.color = "red";
+      roundColor.style.color = "red"
     } else {
-      roundColor.style.color = "green";
+      roundColor.style.color = "green"
     }
-  };
+  }
   const passwordChanging = (eve) => {
-    const roundColor = document.querySelector(".checkpas");
-    setPass(eve.target.value);
+    const roundColor = document.querySelector(".checkpas")
+    setPass(eve.target.value)
     if (eve.target.value === "") {
-      roundColor.style.color = "grey";
+      roundColor.style.color = "grey"
     } else if (!passRegex.test(pass)) {
-      roundColor.style.color = "red";
+      roundColor.style.color = "red"
     } else {
-      roundColor.style.color = "green";
+      roundColor.style.color = "green"
     }
-  };
+  }
   const rePasswordChanging = (eve) => {
-    const roundColor = document.querySelector(".recheckpas");
-    setConfirmPass(eve.target.value);
+    const roundColor = document.querySelector(".recheckpas")
+    setConfirmPass(eve.target.value)
     if (eve.target.value === "") {
-      roundColor.style.color = "grey";
+      roundColor.style.color = "grey"
     } else if (!passRegex.test(confirmPass)) {
-      roundColor.style.color = "red";
+      roundColor.style.color = "red"
     } else {
-      roundColor.style.color = "green";
+      roundColor.style.color = "green"
     }
-  };
-  const signupbtnClicked = async(event) => {
-    event.preventDefault();
-    if (email === "") {
-      notifyRed("Email is empty");
+  }
+  const signupbtnClicked = async (event) => {
+    event.preventDefault()
+    if (name === "") {
+      notifyRed("Name is empty")
+    } else if (email === "") {
+      notifyRed("Email is empty")
     } else if (pass === 0) {
-      notifyRed("Enter password");
+      notifyRed("Enter password")
     } else if (confirmPass === 0) {
-      notifyRed("Enter confirm password");
+      notifyRed("Enter confirm password")
     } else if (pass !== confirmPass) {
-      notifyYellow("Password and Confirm password not matches");
+      notifyYellow("Password and Confirm password not matches")
     } else {
       if (!emailRegex.test(email)) {
-        notifyYellow("Enter correct email address");
+        notifyYellow("Enter correct email address")
       } else if (!passRegex.test(pass)) {
-        notifyYellow("Not Strong password");
+        notifyYellow("Not Strong password")
       } else if (!passRegex.test(confirmPass)) {
-        notifyYellow("Not Strong Confirm password");
+        notifyYellow("Not Strong Confirm password")
       } else {
         try {
-          const response = await axios.post("https://budgetplanner-backend-1.onrender.com/signup",{
-            email,
-            password: pass,
-            RePassword: confirmPass
-          },{
-            headers: {
-              'Content-Type': 'application/json',
+          setLoading(true)
+          const response = await axios.post(
+            "https://budgetplanner-backend-1.onrender.com/signup",
+            {
+              name,
+              email,
+              password: pass,
             },
-          })
-
-          notifyGreen(response.data.message || "User registered successfully!");
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          setLoading(false)
+          notifyGreen(response.data.message || "User registered successfully!")
           setTimeout(() => {
-            navigate('/');
-          }, 2000);
-          
+            navigate("/")
+          }, 2000)
         } catch (error) {
-          console.error("Error",error)
-          notifyRed("Error signing up, please try again.");
+          console.error("Error", error)
+          notifyRed("Error signing up, please try again.")
+        } finally {
+          setLoading(false)
         }
-        // finally{
-        //   notifyGreen(
-        //     "Got your credentials🥳 Bingo! You're now part of the family. Cheers! 🥂"
-        //   );
-        //   navigate('/');
-        // }
       }
     }
-  };
+  }
 
   return (
     <main className="main">
       <div className="loginbox">
         <form className="form" method="post" action="server.js">
           <h2 className="SignUp">SignUp</h2>
+
+          <div className="nameBox">
+            <input
+              type="test"
+              name="name"
+              id="name"
+              placeholder="Enter name"
+              required
+              onChange={nameChanging}
+            />
+          </div>
 
           <div className="mai">
             <input
@@ -154,7 +173,19 @@ export default function SignUp() {
             onClick={signupbtnClicked}
             id="button"
           >
-            Sign Up
+            {loading ? (
+              <>
+                <ClipLoader
+                  color="#D898D7"
+                  loading={loading}
+                  size={25}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </>
+            ) : (
+              <>Sign Up</>
+            )}
           </button>
           <ToastContainer newestOnTop autoClose={2000} />
           <div className="or">
@@ -165,11 +196,11 @@ export default function SignUp() {
           <div className="google">
             <GoogleLogin
               onSuccess={(credentialResponse) => {
-                const decoded = jwtDecode(credentialResponse.credential);
-                console.log(decoded);
+                const decoded = jwtDecode(credentialResponse.credential)
+                console.log(decoded)
               }}
               onError={() => {
-                alert("Login Failed");
+                alert("Login Failed")
               }}
             />
           </div>
@@ -178,7 +209,7 @@ export default function SignUp() {
             <div
               className="allogin"
               onClick={() => {
-                navigate("/");
+                navigate("/")
               }}
             >
               Login
@@ -187,5 +218,5 @@ export default function SignUp() {
         </form>
       </div>
     </main>
-  );
+  )
 }
