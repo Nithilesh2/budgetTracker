@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { toast } from "react-toastify"
 import AppContext from "./AppContext"
-import { jwtDecode } from "jwt-decode"
 import axios from "axios"
+import { useCookies } from "react-cookie"
 
 const AppStore = (props) => {
   const notifyFalse = (val) => {
@@ -13,212 +13,94 @@ const AppStore = (props) => {
   const [category, setCategory] = useState("")
   const [amount, setAmount] = useState("")
   const [spents, setSpents] = useState(0)
-  const [budget, setBudget] = useState(500)
   const [remaining, setRemaining] = useState(0)
-  const [catData, setCatData] = useState([])
-  const [amoData, setAmoData] = useState([])
-  const [decoded, setDecoded] = useState("")
-  // const [decodedName, setDecodedName] = useState("")
-  const [merge, setMerge] = useState({})
-  const [dateCreated, setDateCreated] = useState([])
+  const [budgetChanged, setBudgetChanged] = useState(false)
+  const [amountFromDb, setAmountFromDb] = useState()
 
-  // const [userId, setUserId] = useState(localStorage.getItem("userId") || null)
-
-  const initializeMergeState = () => {
-    const savedMerge = localStorage.getItem("merge")
-    if (savedMerge) {
-      const parsedMerge = JSON.parse(savedMerge)
-      setMerge(parsedMerge)
-    } else {
-      setMerge({})
-    }
-  }
-
-  useEffect(() => {
-    initializeMergeState()
-    const savedCategory = localStorage.getItem("Category")
-    if (savedCategory) {
-      setCatData(JSON.parse(savedCategory))
-    }
-    const savedAmount = localStorage.getItem("Amount")
-    if (savedAmount) {
-      setAmoData(JSON.parse(savedAmount))
-    }
-    const savedDateCreated = localStorage.getItem("DateCreated")
-    if (savedDateCreated) {
-      setDateCreated(JSON.parse(savedDateCreated))
-    }
-    const savedBudget = localStorage.getItem("Budget")
-    if (savedBudget) {
-      setBudget(parseFloat(savedBudget))
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem("merge", JSON.stringify(merge))
-    localStorage.setItem("Category", JSON.stringify(catData))
-    localStorage.setItem("Amount", JSON.stringify(amoData))
-    localStorage.setItem("Budget", budget)
-    localStorage.setItem("DateCreated", JSON.stringify(dateCreated))
-  }, [merge, catData, amoData, budget, dateCreated])
-
-  useEffect(() => {
-    if (catData.length > 0 && amoData.length > 0) {
-      setMerge(mergeArrays(catData, amoData, dateCreated))
-      setSpents(amoData.reduce((acc, cur) => acc + parseInt(cur), 0))
-      setRemaining(
-        parseFloat(budget) -
-          amoData.reduce((acc, cur) => acc + parseFloat(cur), 0)
-      )
-    }
-  }, [catData, amoData, budget, dateCreated])
-
-  const mergeArrays = (cats, amos, dates) => {
-    const merged = {}
-    for (let i = 0; i < cats.length; i++) {
-      merged[cats[i]] = {
-        amount: amos[i],
-        date: dates[i],
-      }
-    }
-    return merged
-  }
-
-  function AddExpenses(category, amount) {
-    if (budget === 0) {
-      notifyFalse("💵 Budget is null")
-    } else {
-      if (category === "") {
-        notifyFalse("🚫 Empty category detected!")
-      } else if (amount === "") {
-        notifyFalse("🚫 Empty amount detected!")
-      } else if (amount < 0) {
-        notifyFalse("🚫 Amount should be positive")
-      } else {
-        const currentDate = new Date()
-        const categoryIndex = catData.findIndex((cat) => cat === category)
-        if (categoryIndex !== -1) {
-          setAmoData((prevAmoData) => {
-            const newAmoData = [...prevAmoData]
-            newAmoData[categoryIndex] = (
-              parseInt(newAmoData[categoryIndex]) + parseInt(amount)
-            ).toString()
-            return newAmoData
-          })
-          setDateCreated((prevDateCreated) => {
-            const newDateCreated = [...prevDateCreated]
-            newDateCreated[categoryIndex] = currentDate
-            return newDateCreated
-          })
-        } else {
-          setCatData((prevCatData) => [...prevCatData, category])
-          setAmoData((prevAmoData) => [...prevAmoData, amount])
-          setDateCreated((prevDateCreated) => [...prevDateCreated, currentDate])
-        }
-        setCategory("")
-        setAmount("")
-        notifyTrue("💵 Wallet-friendly vibes! Another entry safely recorded.")
-      }
-    }
-  }
+  //setCookies
+  const [cookies] = useCookies(["userId", "userName"])
 
   //new here
-  const userId = localStorage.getItem("userId")
   const [expenses, setExpenses] = useState([])
+  const [loadingInExpensePage, setLoadingInExpensePage] = useState(false)
 
   const addExpenses = async () => {
+    setLoadingInExpensePage(true)
     const parAmount = parseInt(amount)
-    const categoryLowerCase = category.toLowerCase()
-    try {
-      await axios.post(
-        `https://budgetplanner-backend-1.onrender.com/users/${userId}/data`,
-        {
-          category: categoryLowerCase,
-          amount: parAmount,
+    if (category !== "") {
+      if (amount !== "") {
+        const categoryLowerCase = category.toLowerCase()
+        try {
+          await axios.post(
+            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            {
+              category: categoryLowerCase,
+              amount: parAmount,
+            }
+          )
+          setLoadingInExpensePage(false)
+        } catch (error) {
+          console.error(error)
+        } finally {
+          setLoadingInExpensePage(false)
         }
-      )
-    } catch (error) {
-      console.error(error)
-    }
 
-    try {
-      const response = await axios.get(
-        `https://budgetplanner-backend-1.onrender.com/users/${userId}`,
-        { headers: { "Content-Type": "application/json" } }
-      )
-      setExpenses(response.data)
-    } catch (error) {
-      console.error("Error fetching expenses:", error)
-    } finally {
-      setAmount("")
-      setCategory("")
-    }
-  }
-
-  const deleteItem = (itemName) => {
-    const itemIndex = catData.indexOf(itemName)
-    if (itemIndex !== -1) {
-      const newCatData = [...catData]
-      const newAmoData = [...amoData]
-      const newDateCreated = [...dateCreated]
-      newCatData.splice(itemIndex, 1)
-      newAmoData.splice(itemIndex, 1)
-      newDateCreated.splice(itemIndex, 1)
-      setCatData(newCatData)
-      setAmoData(newAmoData)
-      setDateCreated(newDateCreated)
-      setMerge((prevMerge) => {
-        const newMerge = { ...prevMerge }
-        delete newMerge[itemName]
-        return newMerge
-      })
-      if (newAmoData.length === 0) {
-        setSpents(0)
-        setRemaining(budget)
+        try {
+          const response = await axios.get(
+            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
+            { headers: { "Content-Type": "application/json" } }
+          )
+          setExpenses(response.data)
+        } catch (error) {
+          console.error("Error fetching expenses:", error)
+        } finally {
+          setAmount("")
+          setCategory("")
+          setLoadingInExpensePage(false)
+        }
+      } else {
+        notifyFalse("Empty amount, you should mention the amount")
+        setLoadingInExpensePage(false)
       }
-      notifyTrue("Data deleted successfully!")
-    } else {
-      notifyFalse("Data not found!")
+    } else if (category === "") {
+      notifyFalse("Empty category, you should mention the category")
+      setLoadingInExpensePage(false)
     }
+    setLoadingInExpensePage(false)
   }
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    const options = {
-      month: "numeric",
-      day: "numeric",
-      year: "2-digit",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: false,
-    }
-    return date.toLocaleString("en-IN", options)
-  }
-
-  function changeBudget() {
-    const changebudget = parseInt(prompt("Enter budget here: ", 5000))
+  async function changeBudget() {
+    const changebudget = parseInt(prompt("Enter budget here: ",5000))
     if (changebudget < 0) {
       notifyFalse("Positive numbers only for your budget! 💰")
     } else {
-      setBudget(changebudget)
-      if (changebudget > budget) {
-        notifyTrue("Budget increased successfully! 💰💼")
-      } else if (changebudget < budget) {
-        notifyTrue("Budget decreased successfully! 💰💼")
-      } else {
-        notifyTrue("Budget remains same! 💰💼")
+      setBudgetChanged(true)
+      try {
+        const response = await axios.post(
+          `http://localhost:8875/users/${cookies.userId}/data`,
+          {
+            budget: changebudget,
+          }
+        )
+        setBudgetChanged(false)
+        notifyTrue(response.data.message)
+      } catch (error) {
+        console.log("Error getting while changing budget: ", error)
+        setBudgetChanged(false)
+      } finally {
+        setBudgetChanged(false)
       }
     }
 
     if (Notification.permission === "granted") {
-      if (changebudget > budget) {
+      if (changebudget > amountFromDb) {
         const notification = new Notification("Budget Planner", {
           body: `Budget increased! final budget ${changebudget}`,
         })
         notification.onclick = () => {
           window.focus()
         }
-      } else if (changebudget < budget) {
+      } else if (changebudget < amountFromDb) {
         const notification = new Notification("Budget Planner", {
           body: `Budget decreased! final budget ${changebudget}`,
         })
@@ -247,16 +129,9 @@ const AppStore = (props) => {
       if (event.target.id === "category") {
         document.getElementById("amount").focus()
       } else if (event.target.id === "amount") {
-        AddExpenses(category, amount)
-        document.getElementById("category").focus()
+        document.getElementById("addBtn").focus()
       }
     }
-  }
-
-  function loginClicked(credentialResponse) {
-    let decode = jwtDecode(credentialResponse.credential)
-    let userName = decode.name
-    setDecoded(userName)
   }
 
   function enterKey(eve) {
@@ -264,12 +139,10 @@ const AppStore = (props) => {
       if (eve.target.id === "category") {
         document.getElementById("amount").focus()
       } else if (eve.target.id === "amount") {
-        AddExpenses(category, amount)
-        document.getElementById("category").focus()
+        document.getElementById("addBtn").focus()
       }
     }
   }
-
   return (
     <AppContext.Provider
       value={{
@@ -279,30 +152,18 @@ const AppStore = (props) => {
         setCategory,
         spents,
         setSpents,
-        budget,
-        setBudget,
         remaining,
         setRemaining,
-        catData,
-        setCatData,
-        amoData,
-        setAmoData,
-        merge,
-        setMerge,
-        AddExpenses,
-        deleteItem,
         handleKeyPress,
         changeBudget,
-        decoded,
-        setDecoded,
-        loginClicked,
-        formatDate,
         enterKey,
         expenses,
         addExpenses,
         setExpenses,
-        // userId,
-        // setUserId,
+        loadingInExpensePage,
+        budgetChanged,
+        setAmountFromDb,
+        amountFromDb,
       }}
     >
       {props.children}

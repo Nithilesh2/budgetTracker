@@ -5,6 +5,10 @@ import Navbar from "./navbar"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
+import ClipLoader from "react-spinners/ClipLoader"
+import { useCookies } from "react-cookie"
+import { TailSpin } from "react-loader-spinner"
+import { useNavigate } from "react-router-dom"
 
 function Expenses() {
   const {
@@ -14,28 +18,39 @@ function Expenses() {
     setAmount,
     amount,
     enterKey,
-    budget,
     changeBudget,
     spents,
     remaining,
     addExpenses,
     expenses,
     setExpenses,
+    budgetChanged,
+    loadingInExpensePage,
+    setAmountFromDb,
+    amountFromDb,
   } = useContext(AppContext)
 
-  const userId = localStorage.getItem("userId")
-  const userName = localStorage.getItem("userName")
+  const [cookies] = useCookies(["userId", "userName"])
+  const navigate = useNavigate()
   //to remove when user is deleted data
   const [deleted, setDeleted] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
+
+  useEffect(() => {
+    if (cookies.userId === undefined) {
+      navigate("/")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.userId])
 
   useEffect(() => {
     if (Notification.permission !== "granted") {
-      Notification.requestPermission().then(permission => {
-        const notification = new Notification("Budget Planner",{
-          body: `Hi there, ${userName}`,
+      Notification.requestPermission().then(() => {
+        const notification = new Notification("Budget Planner", {
+          body: `Hi there, ${cookies.userName}`,
         })
 
-        notification.onclick =()=>{
+        notification.onclick = () => {
           window.focus()
         }
       })
@@ -43,10 +58,12 @@ function Expenses() {
     const fetchExpenses = async () => {
       try {
         const response = await axios.get(
-          `https://budgetplanner-backend-1.onrender.com/users/${userId}`,
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
           { headers: { "Content-Type": "application/json" } }
         )
         setExpenses(response.data)
+        // console.log(response.data)
+        setAmountFromDb(response.data[0].budget)
       } catch (error) {
         console.error("Error fetching expenses:", error)
       }
@@ -54,19 +71,23 @@ function Expenses() {
 
     fetchExpenses()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, deleted])
+  }, [cookies.userId, deleted, budgetChanged])
 
   const removeExpense = async (dataId) => {
+    setLoadingDelete(true)
+    setDeleted(true)
     try {
-      setDeleted(true)
       await axios.delete(
-        `https://budgetplanner-backend-1.onrender.com/users/${userId}/data/${dataId}`
+        `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data/${dataId}`
       )
       setDeleted(false)
     } catch (error) {
       console.error("Error deleting expense:", error)
+      setDeleted(false)
+      setLoadingDelete(false)
     } finally {
       setDeleted(false)
+      setLoadingDelete(false)
     }
   }
 
@@ -98,19 +119,39 @@ function Expenses() {
                 />
               </div>
               <div className="expenseAdd">
-                <button onClick={addExpenses} className="addExpenseBtn">
-                  ADD
-                </button>
+                {loadingInExpensePage ? (
+                  <>
+                    <button className="addExpenseBtn">
+                      <ClipLoader
+                        color="#D898D7"
+                        loading={loadingInExpensePage}
+                        size={25}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={addExpenses}
+                    id="addBtn"
+                    className="addExpenseBtn"
+                  >
+                    ADD
+                  </button>
+                )}
+
                 <ToastContainer newestOnTop autoClose={2000} />
               </div>
             </div>
           </div>
           <div className="vline"></div>
           <hr className="vlineAfter" />
+
           <div className="middleRight">
             <div className="middleRightTop">
               <div className="budgetBox">
-                <span className="showBudget">Budget : ₹{budget}</span>
+                <span className="showBudget">Budget : ₹{amountFromDb}</span>
                 <button onClick={changeBudget} className="changeBudget">
                   <ion-icon name="create-outline"></ion-icon>
                 </button>
@@ -122,6 +163,22 @@ function Expenses() {
                 <div className="showSpents">Spent: ₹{spents}</div>
               </div>
             </div>
+            {loadingDelete ? (
+              <div
+                style={{
+                  height: "auto",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingRight: "50%",
+                }}
+              >
+                <TailSpin color="#00BFFF" height={60} width={60} />
+              </div>
+            ) : (
+              ""
+            )}
             <div className="middleRightBottom">
               <div className="myExpenses">My Expenses</div>
               <hr className="hr" />

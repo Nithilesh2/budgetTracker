@@ -1,20 +1,34 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Navbar from "./navbar"
 import "../css/dashboard.css"
 import { Bar, Pie } from "react-chartjs-2"
 import "chart.js/auto"
 import AppContext from "../context/AppContext"
+import { useCookies } from "react-cookie"
 
 function Dashboard() {
-  const { catData, amoData, budget } = useContext(AppContext)
-  const userName = localStorage.getItem("userName")
+  const { budget, expenses } = useContext(AppContext)
+  const [cookies] = useCookies(["userId", "userName"])
+  const [categoryAmount, setCategoryAmount] = useState({})
+
+  useEffect(() => {
+    const amountByCategory = {}
+    expenses.forEach((data) => {
+      if (!amountByCategory[data.category]) {
+        amountByCategory[data.category] = 0
+      }
+      amountByCategory[data.category] += data.amount
+    })
+    setCategoryAmount(amountByCategory)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expenses])
 
   const userData = {
-    labels: catData,
+    labels: Object.keys(categoryAmount),
     datasets: [
       {
         label: `Expenses(budget: ${budget})`,
-        data: amoData,
+        data: Object.values(categoryAmount),
         backgroundColor: [
           "rgba(219, 112, 147, 0.6)",
           "rgba(230, 230, 250, 0.6)",
@@ -47,7 +61,7 @@ function Dashboard() {
         <Navbar />
         <div className="totalData">
           <h1 className="greetings">
-            {userName ? `Welcome back, ${userName}` : "Welcome back, User"}
+            {`Welcome back, ${cookies.userName}`|| "Welcome back, Guest"}
           </h1>
           <div className="barChart">
             <div className="bar1">

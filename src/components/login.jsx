@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
-import AppContext from "../context/AppContext"
+import React, { useRef, useState } from "react"
 import "../css/login.css"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { GoogleLogin } from "@react-oauth/google"
 import { ToastContainer, toast } from "react-toastify"
 import ClipLoader from "react-spinners/ClipLoader"
+import { useCookies } from "react-cookie"
 
 export default function Login() {
   const notifyGreen = (val) => toast.success(`${val}`)
@@ -15,7 +15,7 @@ export default function Login() {
   const emailRef = useRef()
   const passwordRef = useRef()
 
-  const { loginClicked, decoded } = useContext(AppContext)
+  const [, setCookies] = useCookies(["userId", "userName"])
 
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -42,8 +42,20 @@ export default function Login() {
         }
       )
       const { userId, name } = response.data
-      localStorage.setItem("userId", userId)
-      localStorage.setItem("userName", name)
+      if (userId) {
+        setCookies("userId", userId, {
+          path: "/",
+          maxAge: 600,
+          sameSite: "strict",
+        })
+      }
+      if (name) {
+        setCookies("userName", name, {
+          path: "/",
+          maxAge: 600,
+          sameSite: "strict",
+        })
+      }
       setLoading(false)
       notifyGreen(response.data.message)
       navigate("/dashboard")
@@ -65,12 +77,6 @@ export default function Login() {
       setLoading(false)
     }
   }
-  useEffect(() => {
-    if (decoded) {
-      navigate("/dashboard")
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [decoded])
 
   const toggleButton = () => {
     setShow(!show)
@@ -134,7 +140,10 @@ export default function Login() {
             </div>
             <div className="google">
               <GoogleLogin
-                onSuccess={loginClicked}
+                //edit later onsuccess
+                onSuccess={() => {
+                  alert("In process")
+                }}
                 onError={() => {
                   alert("Login Failed")
                 }}

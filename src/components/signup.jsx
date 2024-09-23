@@ -81,11 +81,12 @@ export default function SignUp() {
       } else {
         try {
           setLoading(true)
+          const lowerEmail = email.toLowerCase()
           const response = await axios.post(
             "https://budgetplanner-backend-1.onrender.com/signup",
             {
               name,
-              email,
+              email: lowerEmail,
               password: pass,
             },
             {

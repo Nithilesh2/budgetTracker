@@ -1,20 +1,28 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React from "react"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { useCookies } from "react-cookie"
 
 function Navbar() {
-  const navigate = useNavigate();
-  const [menu, setMenu] = useState(true);
-  const [close, setClose] = useState(false);
+  const navigate = useNavigate()
+  const [menu, setMenu] = useState(true)
+  const [close, setClose] = useState(false)
 
   const menuToggled = () => {
-    setMenu(false);
-    setClose(true);
-  };
+    setMenu(false)
+    setClose(true)
+  }
   const closeToggled = () => {
-    setMenu(true);
-    setClose(false);
-  };
+    setMenu(true)
+    setClose(false)
+  }
+
+  const [, removeCookie] = useCookies(["userId", "userName"])
+  const logout = () => {
+    removeCookie("userId")
+    removeCookie("userName")
+    navigate("/")
+  }
 
   return (
     <>
@@ -25,7 +33,7 @@ function Navbar() {
               src="https://expense-tracker.iprog.tech/assets/main-logo-4574ab8c0203e45ee4fb8a91459f1337c1659a651c1a5ebcbb80fc5e89897d62.png"
               alt="logo"
               onClick={() => {
-                navigate("/dashboard");
+                navigate("/dashboard")
               }}
             />
           </div>
@@ -34,7 +42,7 @@ function Navbar() {
               <li>
                 <div
                   onClick={() => {
-                    navigate("/dashboard");
+                    navigate("/dashboard")
                   }}
                 >
                   Dashboard
@@ -43,7 +51,7 @@ function Navbar() {
               <li>
                 <div
                   onClick={() => {
-                    navigate("/expenses");
+                    navigate("/expenses")
                   }}
                 >
                   Expenses
@@ -52,7 +60,7 @@ function Navbar() {
               <li>
                 <div
                   onClick={() => {
-                    navigate("/");
+                    logout()
                   }}
                 >
                   Logout
@@ -74,7 +82,7 @@ function Navbar() {
         </div>
       </nav>
     </>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar
