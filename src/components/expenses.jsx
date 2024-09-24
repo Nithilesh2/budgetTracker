@@ -107,8 +107,8 @@ function Expenses() {
     const fetchExpenses = async () => {
       try {
         const response = await axios.get(
-          // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/`,
-          `http://localhost:8875/users/${cookies.userId}/`,
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/`,
+          // `http://localhost:8875/users/${cookies.userId}/`,
           { headers: { "Content-Type": "application/json" } }
         )
         setExpenses(response.data)
@@ -120,7 +120,8 @@ function Expenses() {
     const fetchBudget = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8875/users/${cookies.userId}/budget`,
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/budget`,
+          // `http://localhost:8875/users/${cookies.userId}/budget`,
           { headers: { "Content-Type": "application/json" } }
         )
         setAmountFromDb(response.data.budget)

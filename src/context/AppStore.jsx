@@ -32,8 +32,8 @@ const AppStore = (props) => {
         const categoryLowerCase = category.toLowerCase()
         try {
           await axios.post(
-            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
-            `http://localhost:8875/users/${cookies.userId}/data`,
+            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            // `http://localhost:8875/users/${cookies.userId}/data`,
             {
               category: categoryLowerCase,
               amount: parAmount,
@@ -48,8 +48,8 @@ const AppStore = (props) => {
 
         try {
           const response = await axios.get(
-            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
-            `http://localhost:8875/users/${cookies.userId}`,
+            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
+            // `http://localhost:8875/users/${cookies.userId}`,
             { headers: { "Content-Type": "application/json" } }
           )
           setExpenses(response.data)
@@ -79,7 +79,8 @@ const AppStore = (props) => {
       setBudgetChanged(true)
       try {
         const response = await axios.post(
-          `http://localhost:8875/users/${cookies.userId}/budget`,
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/budget`,
+          // `http://localhost:8875/users/${cookies.userId}/budget`,
           {
             budget: changebudget,
           }
