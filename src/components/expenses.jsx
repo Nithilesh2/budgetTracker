@@ -12,22 +12,24 @@ import { useNavigate } from "react-router-dom"
 
 function Expenses() {
   const {
-    setCategory,
     category,
+    setCategory,
     handleKeyPress,
-    setAmount,
     amount,
+    setAmount,
     enterKey,
     changeBudget,
     spents,
+    setSpents,
     remaining,
+    setRemaining,
     addExpenses,
     expenses,
     setExpenses,
     budgetChanged,
     loadingInExpensePage,
-    setAmountFromDb,
     amountFromDb,
+    setAmountFromDb,
   } = useContext(AppContext)
 
   const [cookies] = useCookies(["userId", "userName"])
@@ -44,6 +46,52 @@ function Expenses() {
   }, [cookies.userId])
 
   useEffect(() => {
+    const spent = expenses.reduce((starter, data) => starter + data.amount, 0)
+    const remaining = amountFromDb - spent
+    setSpents(spent)
+    setRemaining(remaining)
+
+    const getSixtyPer = amountFromDb * 0.6
+    const getNintyPer = amountFromDb * 0.9
+
+    if (spents <= getSixtyPer) {
+      Notification.requestPermission().then(() => {
+        const notification = new Notification("Budget Planner", {
+          body: `You are in safe 😁`,
+        })
+        notification.onclick = () => {
+          window.focus()
+          window.open("https://2024-budgettracker.netlify.app/", "_blank")
+        }
+      })
+    }
+    if (spents >= getSixtyPer) {
+      alert("You consumed 60% of your expenses")
+      Notification.requestPermission().then(() => {
+        const notification = new Notification("Budget Planner", {
+          body: `You consumed 60% of your budget plan 😟`,
+        })
+        notification.onclick = () => {
+          window.focus()
+          window.open("https://2024-budgettracker.netlify.app/", "_blank")
+        }
+      })
+    }
+    if (spents >= getNintyPer) {
+      alert("You consumed 90% of your expenses")
+      Notification.requestPermission().then(() => {
+        const notification = new Notification("Budget Planner", {
+          body: `You consumed 90% of your budget plan 😰`,
+        })
+        notification.onclick = () => {
+          window.focus()
+          window.open("https://2024-budgettracker.netlify.app/", "_blank")
+        }
+      })
+    }
+  }, [expenses, setSpents, setRemaining, amountFromDb, spents])
+
+  useEffect(() => {
     if (Notification.permission !== "granted") {
       Notification.requestPermission().then(() => {
         const notification = new Notification("Budget Planner", {
@@ -52,31 +100,44 @@ function Expenses() {
 
         notification.onclick = () => {
           window.focus()
+          window.location.href = "https://2024-budgettracker.netlify.app/"
         }
       })
     }
     const fetchExpenses = async () => {
       try {
         const response = await axios.get(
-          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
+          // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/`,
+          `http://localhost:8875/users/${cookies.userId}/`,
           { headers: { "Content-Type": "application/json" } }
         )
         setExpenses(response.data)
-        // console.log(response.data)
-        setAmountFromDb(response.data[0].budget)
       } catch (error) {
         console.error("Error fetching expenses:", error)
       }
     }
 
+    const fetchBudget = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8875/users/${cookies.userId}/budget`,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        setAmountFromDb(response.data.budget)
+      } catch (error) {
+        console.log("Error fetching budget:", error)
+      }
+    }
+
     fetchExpenses()
+    fetchBudget()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookies.userId, deleted, budgetChanged])
 
   const removeExpense = async (dataId) => {
     setLoadingDelete(true)
-    setDeleted(true)
     try {
+      setDeleted(true)
       await axios.delete(
         `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data/${dataId}`
       )

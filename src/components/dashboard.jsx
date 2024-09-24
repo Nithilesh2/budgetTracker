@@ -61,7 +61,7 @@ function Dashboard() {
         <Navbar />
         <div className="totalData">
           <h1 className="greetings">
-            {`Welcome back, ${cookies.userName}`|| "Welcome back, Guest"}
+            {`Welcome back, ${cookies.userName}` || "Welcome back, Guest"}
           </h1>
           <div className="barChart">
             <div className="bar1">

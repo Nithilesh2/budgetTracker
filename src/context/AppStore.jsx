@@ -32,7 +32,8 @@ const AppStore = (props) => {
         const categoryLowerCase = category.toLowerCase()
         try {
           await axios.post(
-            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            `http://localhost:8875/users/${cookies.userId}/data`,
             {
               category: categoryLowerCase,
               amount: parAmount,
@@ -47,7 +48,8 @@ const AppStore = (props) => {
 
         try {
           const response = await axios.get(
-            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
+            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
+            `http://localhost:8875/users/${cookies.userId}`,
             { headers: { "Content-Type": "application/json" } }
           )
           setExpenses(response.data)
@@ -70,14 +72,14 @@ const AppStore = (props) => {
   }
 
   async function changeBudget() {
-    const changebudget = parseInt(prompt("Enter budget here: ",5000))
+    const changebudget = parseInt(prompt("Enter budget here: ", 5000))
     if (changebudget < 0) {
       notifyFalse("Positive numbers only for your budget! 💰")
     } else {
       setBudgetChanged(true)
       try {
         const response = await axios.post(
-          `http://localhost:8875/users/${cookies.userId}/data`,
+          `http://localhost:8875/users/${cookies.userId}/budget`,
           {
             budget: changebudget,
           }
