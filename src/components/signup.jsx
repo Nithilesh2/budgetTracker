@@ -115,6 +115,7 @@ export default function SignUp() {
 
   return (
     <main className="main">
+      <ToastContainer newestOnTop autoClose={2000} />
       <div className="loginbox">
         <form className="form" method="post" action="server.js">
           <h2 className="SignUp">SignUp</h2>
@@ -191,7 +192,6 @@ export default function SignUp() {
               <>Sign Up</>
             )}
           </button>
-          <ToastContainer newestOnTop autoClose={2000} />
           <div className="or">
             <hr className="hr" />
             <h4>OR</h4>

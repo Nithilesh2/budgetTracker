@@ -42,6 +42,15 @@ function Navbar() {
               <li>
                 <div
                   onClick={() => {
+                    navigate("/printexpenses")
+                  }}
+                >
+                  Print
+                </div>
+              </li>
+              <li>
+                <div
+                  onClick={() => {
                     navigate("/dashboard")
                   }}
                 >

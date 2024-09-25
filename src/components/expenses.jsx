@@ -50,45 +50,6 @@ function Expenses() {
     const remaining = amountFromDb - spent
     setSpents(spent)
     setRemaining(remaining)
-
-    const getSixtyPer = amountFromDb * 0.6
-    const getNintyPer = amountFromDb * 0.9
-
-    if (spents <= getSixtyPer) {
-      Notification.requestPermission().then(() => {
-        const notification = new Notification("Budget Planner", {
-          body: `You are in safe 😁`,
-        })
-        notification.onclick = () => {
-          window.focus()
-          window.open("https://2024-budgettracker.netlify.app/", "_blank")
-        }
-      })
-    }
-    if (spents >= getSixtyPer) {
-      alert("You consumed 60% of your expenses")
-      Notification.requestPermission().then(() => {
-        const notification = new Notification("Budget Planner", {
-          body: `You consumed 60% of your budget plan 😟`,
-        })
-        notification.onclick = () => {
-          window.focus()
-          window.open("https://2024-budgettracker.netlify.app/", "_blank")
-        }
-      })
-    }
-    if (spents >= getNintyPer) {
-      alert("You consumed 90% of your expenses")
-      Notification.requestPermission().then(() => {
-        const notification = new Notification("Budget Planner", {
-          body: `You consumed 90% of your budget plan 😰`,
-        })
-        notification.onclick = () => {
-          window.focus()
-          window.open("https://2024-budgettracker.netlify.app/", "_blank")
-        }
-      })
-    }
   }, [expenses, setSpents, setRemaining, amountFromDb, spents])
 
   useEffect(() => {

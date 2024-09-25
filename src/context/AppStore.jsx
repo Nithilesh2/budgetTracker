@@ -16,6 +16,9 @@ const AppStore = (props) => {
   const [remaining, setRemaining] = useState(0)
   const [budgetChanged, setBudgetChanged] = useState(false)
   const [amountFromDb, setAmountFromDb] = useState()
+  const [categoryAmount, setCategoryAmount] = useState({})
+  const [quote, setQuote] = useState("");
+
 
   //setCookies
   const [cookies] = useCookies(["userId", "userName"])
@@ -167,6 +170,10 @@ const AppStore = (props) => {
         budgetChanged,
         setAmountFromDb,
         amountFromDb,
+        setQuote,
+        quote,
+        setCategoryAmount,
+        categoryAmount
       }}
     >
       {props.children}

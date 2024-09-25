@@ -23,6 +23,33 @@
   background-color: black;
   border-radius: 10px;
 }
+.myExpenses::selection,
+span::selection,
+.expensedate .date::selection,
+.expensedate .createdorupdated::selection,
+.navData li div::selection,
+.navData-active li div::selection,
+.emptyExpenses::selection {
+  background-color: rgba(0, 0, 0, 0.773);
+  color: #d898d7;
+}
+.showBudget::selection {
+  background-color: rgba(0, 0, 0, 0.773);
+  color: #d4d4d4;
+}
+.showRemaining::selection {
+  background-color: rgba(0, 0, 0, 0.773);
+  color: #b7e7b7;
+}
+.showSpents::selection {
+  background-color: rgba(0, 0, 0, 0.773);
+  color: #ed5e5e;
+}
+.addExpenseBtn::selection,
+input::selection {
+  background-color: rgba(0, 0, 0, 0.773);
+  color: white;
+}
 .nav {
   height: 75px;
   width: 2840px;
@@ -678,7 +705,7 @@ ion-icon {
   .expenseData .expenseAction {
     margin-left: 27px;
   }
-  .date{
+  .date {
     font-size: 0.8rem;
   }
 }
