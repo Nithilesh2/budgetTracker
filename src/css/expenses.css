@@ -561,6 +561,7 @@ ion-icon {
     margin: 0 6px;
   }
   .middleRightTop {
+    height: 175px;
     flex-direction: column;
     gap: 1rem;
   }

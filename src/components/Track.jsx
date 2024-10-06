@@ -151,8 +151,8 @@ const Track = () => {
           <hr className="vlineAfter" />
 
           <div className="middleRight">
-            <div className="middleRightTop">
-              <div className="budgetBox">
+            <div className={styles.middleRightTopTrack}>
+              <div className={styles.budgetBoxTrack}>
                 <span className="showBudget">Total : ₹{totalAmount}</span>
               </div>
             </div>
