@@ -23,13 +23,11 @@
   align-items: center;
   justify-content: center;
 }
-.sortByPrice {
+.sortByPrice,.sortByCreatedOrUpdated {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
+.sortByCreatedOrUpdated p,
 .sortByPrice p,
 .sortByDate p {
   font-size: 1.3rem;
@@ -39,7 +37,7 @@
 .sortByhtl {
   margin: 5px 0 5px 20px;
   height: 30px;
-  width: 150px;
+  width: 115px;
   background-color: #fff;
   border-radius: 40px;
   font-size: 0.9rem;
@@ -47,6 +45,26 @@
 }
 .sortByDateInput {
   max-width: 250px;
-  width: 94%;
+  width: 85%;
   margin-left: 20px;
+  padding-right: 15px;
+}
+.clearBtnBox{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clearBtn{
+  height: 35px;
+  width: 120px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 40px;
+  background-color: #fff;
+}
+@media screen and (max-width: 500px){
+  .filterBox{
+    margin: 0 15px;
+  }
 }

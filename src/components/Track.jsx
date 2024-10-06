@@ -47,6 +47,30 @@ const Track = () => {
     setFilterData(sortedHoL)
   }
 
+  const createdShow = () => {
+    const sortedCreated = expenses.filter((data) => {
+      if (data.createdAt === data.updatedAt) {
+        return data.category
+      }
+      return false
+    })
+    setFilterData(sortedCreated)
+  }
+  const updatedShow = () => {
+    const sortedUpdated = expenses.filter((data) => {
+      if (data.createdAt !== data.updatedAt) {
+        return data.category
+      }
+      return false
+    })
+    setFilterData(sortedUpdated)
+  }
+  const clearData = () => {
+    setSearch("")
+    setAmount("")
+    setFilterData([])
+  }
+
   return (
     <>
       <main className="mainExpense">
@@ -97,6 +121,15 @@ const Track = () => {
                       High to Low
                     </button>
                   </div>
+                  <div className={styles.sortByCreatedOrUpdated}>
+                    <p>Sort By Created/Updated(All)</p>
+                    <button className={styles.sortBylth} onClick={createdShow}>
+                      Created
+                    </button>
+                    <button className={styles.sortByhtl} onClick={updatedShow}>
+                      Updated
+                    </button>
+                  </div>
                   <div className={styles.sortByDate}>
                     <p>Get Date</p>
                     <input
@@ -104,6 +137,11 @@ const Track = () => {
                       className={styles.sortByDateInput}
                       onChange={dateChanged}
                     />
+                  </div>
+                  <div className={styles.clearBtnBox}>
+                    <button className={styles.clearBtn} onClick={clearData}>
+                      Clear Filter
+                    </button>
                   </div>
                 </div>
               </div>
