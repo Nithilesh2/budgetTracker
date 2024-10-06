@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import AppContext from "./AppContext"
 import axios from "axios"
@@ -17,8 +17,13 @@ const AppStore = (props) => {
   const [budgetChanged, setBudgetChanged] = useState(false)
   const [amountFromDb, setAmountFromDb] = useState()
   const [categoryAmount, setCategoryAmount] = useState({})
-  const [quote, setQuote] = useState("");
+  const [quote, setQuote] = useState("")
+  const [deleted, setDeleted] = useState(false)
 
+  //track
+  const [search, setSearch] = useState("")
+  const [filterData, setFilterData] = useState([])
+  const [totalAmount, setTotalAmount] = useState()
 
   //setCookies
   const [cookies] = useCookies(["userId", "userName"])
@@ -35,8 +40,8 @@ const AppStore = (props) => {
         const categoryLowerCase = category.toLowerCase()
         try {
           await axios.post(
-            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
-            // `http://localhost:8875/users/${cookies.userId}/data`,
+            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            `http://localhost:8875/users/${cookies.userId}/data`,
             {
               category: categoryLowerCase,
               amount: parAmount,
@@ -149,6 +154,59 @@ const AppStore = (props) => {
       }
     }
   }
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await axios.get(
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/`,
+          // `http://localhost:8875/users/${cookies.userId}/`,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        setExpenses(response.data)
+      } catch (error) {
+        console.error("Error fetching expenses:", error)
+      }
+    }
+
+    const fetchBudget = async () => {
+      try {
+        const response = await axios.get(
+          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/budget`,
+          // `http://localhost:8875/users/${cookies.userId}/budget`,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        setAmountFromDb(response.data.budget)
+      } catch (error) {
+        console.log("Error fetching budget:", error)
+      }
+    }
+
+    fetchExpenses()
+    fetchBudget()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.userId, deleted, budgetChanged])
+
+  //track page
+  const searchFilter = () => {
+    const searchFilterData = expenses.filter((data) => {
+      if (search !== "" && amount !== "") {
+        return data.category === search && data.amount === parseInt(amount)
+      } else if (search !== "" && amount === "") {
+        return data.category === search
+      } else if (search === "" && amount !== "") {
+        return data.amount === parseInt(amount)
+      }
+      return false
+    })
+    setFilterData(searchFilterData)
+  }
+
+  useEffect(()=>{
+    setTotalAmount(filterData.reduce((acc, curr) => acc + curr.amount, 0))
+  },[filterData])
+
+
   return (
     <AppContext.Provider
       value={{
@@ -173,7 +231,16 @@ const AppStore = (props) => {
         setQuote,
         quote,
         setCategoryAmount,
-        categoryAmount
+        categoryAmount,
+        deleted,
+        setDeleted,
+        search,
+        setSearch,
+        filterData,
+        setFilterData,
+        totalAmount,
+        setTotalAmount,
+        searchFilter,
       }}
     >
       {props.children}

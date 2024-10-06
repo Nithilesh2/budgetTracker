@@ -472,9 +472,6 @@ ion-icon {
   .createdOrUpdated {
     width: 25%;
   }
-}
-
-@media screen and (max-width: 680px) {
   .expenseTracker {
     height: auto;
     width: 0;
@@ -549,14 +546,14 @@ ion-icon {
   }
 
   input {
-    max-width: 160px;
+    max-width: 230px;
     width: 100%;
     border-radius: 20px;
     font-size: 0.9rem;
   }
 
   .addExpenseBtn {
-    max-width: 60px;
+    max-width: 100px;
     width: 100%;
     font-size: 0.77rem;
   }
@@ -564,7 +561,6 @@ ion-icon {
     margin: 0 6px;
   }
   .middleRightTop {
-    height: 170px;
     flex-direction: column;
     gap: 1rem;
   }

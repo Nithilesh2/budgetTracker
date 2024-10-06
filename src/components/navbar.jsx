@@ -60,6 +60,15 @@ function Navbar() {
               <li>
                 <div
                   onClick={() => {
+                    navigate("/track")
+                  }}
+                >
+                  Track
+                </div>
+              </li>
+              <li>
+                <div
+                  onClick={() => {
                     navigate("/expenses")
                   }}
                 >

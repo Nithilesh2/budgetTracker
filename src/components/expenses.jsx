@@ -25,17 +25,14 @@ function Expenses() {
     setRemaining,
     addExpenses,
     expenses,
-    setExpenses,
-    budgetChanged,
     loadingInExpensePage,
     amountFromDb,
-    setAmountFromDb,
+    setDeleted
   } = useContext(AppContext)
 
   const [cookies] = useCookies(["userId", "userName"])
   const navigate = useNavigate()
   //to remove when user is deleted data
-  const [deleted, setDeleted] = useState(false)
   const [loadingDelete, setLoadingDelete] = useState(false)
 
   useEffect(() => {
@@ -52,49 +49,6 @@ function Expenses() {
     setRemaining(remaining)
   }, [expenses, setSpents, setRemaining, amountFromDb, spents])
 
-  useEffect(() => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission().then(() => {
-        const notification = new Notification("Budget Planner", {
-          body: `Hi there, ${cookies.userName}`,
-        })
-
-        notification.onclick = () => {
-          window.focus()
-          window.location.href = "https://2024-budgettracker.netlify.app/"
-        }
-      })
-    }
-    const fetchExpenses = async () => {
-      try {
-        const response = await axios.get(
-          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/`,
-          // `http://localhost:8875/users/${cookies.userId}/`,
-          { headers: { "Content-Type": "application/json" } }
-        )
-        setExpenses(response.data)
-      } catch (error) {
-        console.error("Error fetching expenses:", error)
-      }
-    }
-
-    const fetchBudget = async () => {
-      try {
-        const response = await axios.get(
-          `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/budget`,
-          // `http://localhost:8875/users/${cookies.userId}/budget`,
-          { headers: { "Content-Type": "application/json" } }
-        )
-        setAmountFromDb(response.data.budget)
-      } catch (error) {
-        console.log("Error fetching budget:", error)
-      }
-    }
-
-    fetchExpenses()
-    fetchBudget()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies.userId, deleted, budgetChanged])
 
   const removeExpense = async (dataId) => {
     setLoadingDelete(true)

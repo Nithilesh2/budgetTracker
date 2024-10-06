@@ -8,7 +8,6 @@ import { useCookies } from "react-cookie"
 
 function Dashboard() {
   const {
-    budget,
     expenses,
     quote,
     amountFromDb,
@@ -37,7 +36,7 @@ function Dashboard() {
     labels: Object.keys(categoryAmount),
     datasets: [
       {
-        label: `Expenses(budget: ${budget})`,
+        label: `Expenses(Budget: ₹${amountFromDb})`,
         data: Object.values(categoryAmount),
         backgroundColor: [
           "rgba(219, 112, 147, 0.6)",
