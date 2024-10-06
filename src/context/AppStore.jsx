@@ -40,8 +40,8 @@ const AppStore = (props) => {
         const categoryLowerCase = category.toLowerCase()
         try {
           await axios.post(
-            // `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
-            `http://localhost:8875/users/${cookies.userId}/data`,
+            `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
+            // `http://localhost:8875/users/${cookies.userId}/data`,
             {
               category: categoryLowerCase,
               amount: parAmount,
@@ -200,6 +200,8 @@ const AppStore = (props) => {
       return false
     })
     setFilterData(searchFilterData)
+    setSearch("")
+    setAmount("")
   }
 
   useEffect(()=>{

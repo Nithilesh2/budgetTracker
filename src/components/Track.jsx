@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import Navbar from "./navbar"
 import AppContext from "../context/AppContext"
 import { ToastContainer } from "react-toastify"
+import styles from "../css/Track.module.css"
 
 const Track = () => {
   const {
@@ -14,7 +15,37 @@ const Track = () => {
     searchFilter,
     totalAmount,
     filterData,
+    setFilterData,
+    expenses,
   } = useContext(AppContext)
+
+  const dateChanged = (eve) => {
+    const retriveDataAccToDate = expenses.filter((data) => {
+      const createdDate = new Date(data.createdAt).toLocaleDateString("en-CA")
+      const updatedDate = new Date(data.updatedAt).toLocaleDateString("en-CA")
+      if (
+        eve.target.value === createdDate ||
+        eve.target.value === updatedDate
+      ) {
+        return data.category
+      }
+      return false
+    })
+    setFilterData(retriveDataAccToDate)
+  }
+
+  const sortLoH = () => {
+    const sortedLoH = [...filterData].sort((a, b) => {
+      return a.amount - b.amount
+    })
+    setFilterData(sortedLoH)
+  }
+  const sortHoL = () => {
+    const sortedHoL = [...filterData].sort((a, b) => {
+      return b.amount - a.amount
+    })
+    setFilterData(sortedHoL)
+  }
 
   return (
     <>
@@ -52,6 +83,29 @@ const Track = () => {
                   Search
                 </button>
                 <ToastContainer newestOnTop autoClose={2000} />
+              </div>
+              {/* {`SELECT ${search !== ""? `${search}`: ""} ${search !== "" && amount !== ""? `,`: ""} ${amount !== ""? `${amount}`: ""} `} */}
+              <div className={styles.filterOptions}>
+                <div className={styles.filterBox}>
+                  <div className={styles.filter}>Filter</div>
+                  <div className={styles.sortByPrice}>
+                    <p>Sort By Price</p>
+                    <button className={styles.sortBylth} onClick={sortLoH}>
+                      Low to High
+                    </button>
+                    <button className={styles.sortByhtl} onClick={sortHoL}>
+                      High to Low
+                    </button>
+                  </div>
+                  <div className={styles.sortByDate}>
+                    <p>Get Date</p>
+                    <input
+                      type="date"
+                      className={styles.sortByDateInput}
+                      onChange={dateChanged}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
