@@ -190,11 +190,11 @@ const AppStore = (props) => {
   //track page
   const searchFilter = () => {
     const searchFilterData = expenses.filter((data) => {
-      if (search !== "" && amount !== "") {
-        return data.category === search && data.amount === parseInt(amount)
-      } else if (search !== "" && amount === "") {
-        return data.category === search
-      } else if (search === "" && amount !== "") {
+      if (search.toLowerCase() !== "" && amount !== "") {
+        return data.category === search.toLowerCase() && data.amount === parseInt(amount)
+      } else if (search.toLowerCase() !== "" && amount === "") {
+        return data.category === search.toLowerCase()
+      } else if (search.toLowerCase() === "" && amount !== "") {
         return data.amount === parseInt(amount)
       }
       return false

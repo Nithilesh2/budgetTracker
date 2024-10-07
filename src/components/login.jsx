@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
 import "../css/login.css"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { GoogleLogin } from "@react-oauth/google"
 import { ToastContainer, toast } from "react-toastify"
 import ClipLoader from "react-spinners/ClipLoader"
@@ -158,6 +158,12 @@ export default function Login() {
               >
                 SignUp
               </span>
+            </div>
+            <div className="newFeature">
+              <Link to="create-group">
+                Try our new group feature! 🎉 Join groups and manage shared
+                expenses easily.
+              </Link>{" "}
             </div>
           </form>
         </div>

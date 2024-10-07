@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import ValidateRoute from "./components/ValidateRoute"
 import PrintPage from "./components/PrintPage"
 import Track from "./components/Track";
+import CreateGroup from "./components/CreateGroup";
+import JoinGroup from "./components/JoinGroup";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Routes>
           <Route index path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/create-group" element={<CreateGroup />} />
+          <Route path="/join-group" element={<JoinGroup />} />
 
           <Route
             path="/dashboard"

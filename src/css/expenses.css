@@ -217,6 +217,9 @@ input::selection {
   align-items: center;
   justify-content: center;
 }
+.emptyExpenses{
+  margin-left: 17px;
+}
 input {
   height: 45px;
   max-width: 550px;
