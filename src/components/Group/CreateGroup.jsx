@@ -20,8 +20,8 @@ const CreateGroup = () => {
     // const groupUserPassword = groupUserPasswordRef.current.value
 
     const reponse = await axios.post(
-      // "https://budgetplanner-backend-1.onrender.com/create-group",
-      "http://localhost:8875/create-group",
+      "https://budgetplanner-backend-1.onrender.com/create-group",
+      // "http://localhost:8875/create-group",
       {
         groupName: groupName,
         groupPassword: groupPassword,

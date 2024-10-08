@@ -21,8 +21,8 @@ const CreateGroup = () => {
 
     try {
       const response = await axios.post(
-        // "https://budgetplanner-backend-1.onrender.com/join-group",
-        "http://localhost:8875/join-group",
+        "https://budgetplanner-backend-1.onrender.com/join-group",
+        // "http://localhost:8875/join-group",
         {
           groupName,
           groupPassword,
@@ -61,7 +61,7 @@ const CreateGroup = () => {
 
             <div className="mai">
               <input
-                type="text"
+                type="password"
                 name="userGroupName"
                 className="e_mail"
                 placeholder="Enter User Password"
@@ -82,7 +82,7 @@ const CreateGroup = () => {
             </div>
             <div className="pas">
               <input
-                type={show ? "text" : "text"}
+                type={show ? "text" : "password"}
                 name="Password"
                 className="pass"
                 placeholder="Enter password"
