@@ -151,13 +151,10 @@ export default function Login() {
             </div>
             <div className="signUp">
               <h5>Doesn't have an account?</h5>
-              <span
-                onClick={() => {
-                  navigate("/signup")
-                }}
+              <Link style={{color: "#F1EFF2"}} to="/signup"
               >
                 SignUp
-              </span>
+              </Link>
             </div>
             <div className="newFeature">
               <Link to="create-group">

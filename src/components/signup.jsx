@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import "../css/signup.css"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { GoogleLogin } from "@react-oauth/google"
 import { jwtDecode } from "jwt-decode"
 import { ToastContainer, toast } from "react-toastify"
@@ -210,14 +210,10 @@ export default function SignUp() {
           </div>
           <div className="logIn">
             <h5>Already have any account?</h5>
-            <div
-              className="allogin"
-              onClick={() => {
-                navigate("/")
-              }}
+            <Link style={{ color: "#F1EFF2", textDecoration: "none"}} to="/login" 
             >
               Login
-            </div>
+            </Link>
           </div>
         </form>
       </div>

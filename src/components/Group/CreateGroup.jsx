@@ -1,8 +1,9 @@
 import React, { useContext, useRef } from "react"
 import { ToastContainer } from "react-toastify"
-import AppContext from "../context/AppContext"
+import AppContext from "../../context/AppContext"
 import ClipLoader from "react-spinners/ClipLoader"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 const CreateGroup = () => {
   const { show, toggleButton, loading } = useContext(AppContext)
@@ -10,19 +11,20 @@ const CreateGroup = () => {
   const groupPasswordRef = useRef()
   const groupNameRef = useRef()
   const groupUserNameRef = useRef()
+  const groupUserPasswordRef = useRef()
 
   const createBtnClicked = async () => {
     const groupName = groupNameRef.current.value
     const groupPassword = groupPasswordRef.current.value
-    const groupUserName = groupUserNameRef.current.value
+    // const groupUserName = groupUserNameRef.current.value
+    // const groupUserPassword = groupUserPasswordRef.current.value
 
     const reponse = await axios.post(
-      "https://budgetplanner-backend-1.onrender.com/create-group",
-      // "http://localhost:8875/create-group",
+      // "https://budgetplanner-backend-1.onrender.com/create-group",
+      "http://localhost:8875/create-group",
       {
         groupName: groupName,
         groupPassword: groupPassword,
-        groupMembers: groupUserName,
       },
       {
         headers: {
@@ -46,9 +48,19 @@ const CreateGroup = () => {
                 type="text"
                 name="userFGroupName"
                 className="e_mail"
-                placeholder="Enter first name"
+                placeholder="Enter User name"
                 required
                 ref={groupUserNameRef}
+              />
+            </div>
+            <div className="mai">
+              <input
+                type="password"
+                name="userFGroupName"
+                className="e_mail"
+                placeholder="Enter User password"
+                required
+                ref={groupUserPasswordRef}
               />
             </div>
             <div className="mai">
@@ -94,6 +106,35 @@ const CreateGroup = () => {
                 <>Create</>
               )}
             </button>
+            <div
+              className="joinGroupNavigate"
+              style={{ backgroundColor: "transparent",cursor: "default",fontWeight: 500 }}
+            >
+              Already have Group?{" "}
+              <Link
+                to="/join-group"
+                style={{ color: "#F1EFF2", textDecoration: "none" }}
+              >
+                {" "}
+                Join Group
+              </Link>
+            </div>
+            <div
+              className="loginNavigate"
+              style={{
+                backgroundColor: "transparent",
+                cursor: "default",
+                fontWeight: 500,
+              }}
+            >
+              Already have an account? 
+              <Link
+                to="/login"
+                style={{ color: "#F1EFF2", textDecoration: "none" }}
+              >
+                Login
+              </Link>
+            </div>
           </div>
         </div>
       </main>

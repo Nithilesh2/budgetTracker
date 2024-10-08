@@ -168,7 +168,7 @@ input::selection {
 
 .middleLeft {
   height: 100%;
-  width: 45%;
+  width: 40%;
   margin-left: 10px;
   transition: all 0.3s;
 }
@@ -211,7 +211,7 @@ input::selection {
 }
 .expenseData .emptyExpenses {
   height: 50vh;
-  width: 100%;
+  width: 90%;
   font-size: 1.2rem;
   display: flex;
   align-items: center;

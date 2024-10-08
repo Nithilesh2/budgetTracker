@@ -189,5 +189,6 @@
   #password,
   .pass {
     width: 230px;
+    font-size: 0.75rem;
   }
 }

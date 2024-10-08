@@ -1,8 +1,9 @@
 import React, { useContext, useRef } from "react"
 import { ToastContainer } from "react-toastify"
-import AppContext from "../context/AppContext"
+import AppContext from "../../context/AppContext"
 import ClipLoader from "react-spinners/ClipLoader"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 const CreateGroup = () => {
   const { show, toggleButton, loading } = useContext(AppContext)
@@ -10,23 +11,23 @@ const CreateGroup = () => {
   const groupPasswordRef = useRef()
   const groupNameRef = useRef()
   const groupUserNameRef = useRef()
+  const groupUserPasswordRef = useRef()
 
   const joinBtnClicked = async () => {
     const groupName = groupNameRef.current.value
     const groupPassword = groupPasswordRef.current.value
     const groupUserName = groupUserNameRef.current.value
-    console.log(groupName)
-    console.log(groupPassword)
-    console.log(groupUserName)
+    const groupUserPassword = groupUserPasswordRef.current.value
 
     try {
       const response = await axios.post(
-        "https://budgetplanner-backend-1.onrender.com/join-group",
-        // "http://localhost:8875/join-group",
+        // "https://budgetplanner-backend-1.onrender.com/join-group",
+        "http://localhost:8875/join-group",
         {
           groupName,
           groupPassword,
           groupMembers: groupUserName,
+          groupMembersPassword: groupUserPassword,
         },
         {
           headers: {
@@ -52,9 +53,20 @@ const CreateGroup = () => {
                 type="text"
                 name="userGroupName"
                 className="e_mail"
-                placeholder="Enter name"
+                placeholder="Enter User name"
                 required
                 ref={groupUserNameRef}
+              />
+            </div>
+
+            <div className="mai">
+              <input
+                type="text"
+                name="userGroupName"
+                className="e_mail"
+                placeholder="Enter User Password"
+                required
+                ref={groupUserPasswordRef}
               />
             </div>
 
@@ -70,7 +82,7 @@ const CreateGroup = () => {
             </div>
             <div className="pas">
               <input
-                type={show ? "text" : "password"}
+                type={show ? "text" : "text"}
                 name="Password"
                 className="pass"
                 placeholder="Enter password"
@@ -101,6 +113,39 @@ const CreateGroup = () => {
                 <>Join</>
               )}
             </button>
+            <div
+              className="createGroupNavigate"
+              style={{
+                backgroundColor: "transparent",
+                cursor: "default",
+                fontWeight: 500,
+              }}
+            >
+              Don't have Group?{" "}
+              <Link
+                to="/create-group"
+                style={{ color: "#F1EFF2", textDecoration: "none" }}
+              >
+                {" "}
+                Create Group
+              </Link>
+            </div>
+            <div
+              className="loginNavigate"
+              style={{
+                backgroundColor: "transparent",
+                cursor: "default",
+                fontWeight: 500,
+              }}
+            >
+              Already have an account? 
+              <Link
+                to="/login"
+                style={{ color: "#F1EFF2", textDecoration: "none" }}
+              >
+                Login
+              </Link>
+            </div>
           </div>
         </div>
       </main>
