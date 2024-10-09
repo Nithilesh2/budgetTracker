@@ -1,10 +1,13 @@
 import React from 'react'
+import GroupNavbar from './GroupNavbar';
 
 const GroupTrack = () => {
   return (
-    <div>
-      Track
-    </div>
+    <>
+      <main className="mainExpense">
+        <GroupNavbar />
+      </main>
+    </>
   )
 }
 

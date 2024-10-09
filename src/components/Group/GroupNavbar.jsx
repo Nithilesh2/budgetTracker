@@ -17,7 +17,7 @@ const GroupNavbar = () => {
   }
 
   const logout = () => {
-    navigate("/")
+    navigate("/join-group")
   }
 
   return (

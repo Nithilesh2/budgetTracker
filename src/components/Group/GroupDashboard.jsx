@@ -1,10 +1,13 @@
-import React from 'react'
+import React from "react"
+import GroupNavbar from "./GroupNavbar"
 
 const GroupDashboard = () => {
   return (
-    <div>
-      Dash board
-    </div>
+    <>
+      <main className="mainExpense">
+        <GroupNavbar />
+      </main>
+    </>
   )
 }
 

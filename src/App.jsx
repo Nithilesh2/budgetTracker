@@ -3,7 +3,7 @@ import Login from "./components/login"
 import SignUp from "./components/signup"
 import Expenses from "./components/expenses"
 import Dashboard from "./components/dashboard"
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import ValidateRoute from "./components/ValidateRoute"
 import PrintPage from "./components/PrintPage"
 import Track from "./components/Track";
@@ -16,7 +16,6 @@ import GroupTrack from "./components/Group/GroupTrack";
 function App() {
   return (
     <>
-      <BrowserRouter>
         <Routes>
           <Route index path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
@@ -61,7 +60,6 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-      </BrowserRouter>
     </>
   )
 }

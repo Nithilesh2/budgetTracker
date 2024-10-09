@@ -32,6 +32,11 @@ const AppStore = (props) => {
   const [expenses, setExpenses] = useState([])
   const [loadingInExpensePage, setLoadingInExpensePage] = useState(false)
 
+  //Group
+  const [groupName, setGroupName] = useState()
+  const [groupPassword, setGroupPassword] = useState()
+  const [groupExpenses, setGroupExpenses] = useState([])
+
   const addExpenses = async () => {
     setLoadingInExpensePage(true)
     const parAmount = parseInt(amount)
@@ -208,6 +213,8 @@ const AppStore = (props) => {
     setTotalAmount(filterData.reduce((acc, curr) => acc + curr.amount, 0))
   },[filterData])
 
+  //Group
+
 
   return (
     <AppContext.Provider
@@ -243,6 +250,13 @@ const AppStore = (props) => {
         totalAmount,
         setTotalAmount,
         searchFilter,
+        //Group
+        setGroupName,
+        setGroupPassword,
+        groupName,
+        groupPassword,
+        setGroupExpenses,
+        groupExpenses
       }}
     >
       {props.children}
