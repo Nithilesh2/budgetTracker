@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom"
 
 const GroupNavbar = () => {
@@ -16,7 +17,12 @@ const GroupNavbar = () => {
     setClose(false)
   }
 
+  const [, removeCookie] = useCookies(["userId", "userName"])
   const logout = () => {
+    removeCookie("groupId")
+    removeCookie("groupName")
+    removeCookie("memberId")
+    removeCookie("memberName")
     navigate("/join-group")
   }
 
@@ -29,7 +35,7 @@ const GroupNavbar = () => {
               src="https://expense-tracker.iprog.tech/assets/main-logo-4574ab8c0203e45ee4fb8a91459f1337c1659a651c1a5ebcbb80fc5e89897d62.png"
               alt="logo"
               onClick={() => {
-                navigate("/")
+                navigate("/dashboard-group")
               }}
             />
           </div>
@@ -42,6 +48,15 @@ const GroupNavbar = () => {
                   }}
                 >
                   Dashboard
+                </div>
+              </li>
+              <li>
+                <div
+                  onClick={() => {
+                    navigate("/proof-group")
+                  }}
+                >
+                  Proofs
                 </div>
               </li>
               <li>

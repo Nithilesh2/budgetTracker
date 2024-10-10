@@ -197,6 +197,7 @@ input::selection {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: default;
 }
 .createdOrUpdated {
   height: 100%;
@@ -454,7 +455,7 @@ ion-icon {
 
 .expenseAction {
   width: auto;
-  cursor: pointer;
+  cursor: default;
 }
 
 .expenseData .expenseAction .fa-solid {
@@ -462,7 +463,7 @@ ion-icon {
   transition: all 0.1s;
 }
 
-.expenseData .expenseAction:hover .fa-solid {
+.expenseData .expenseAction .fa-solid:hover {
   font-size: 24px;
 }
 

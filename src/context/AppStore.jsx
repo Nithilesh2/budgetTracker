@@ -36,6 +36,10 @@ const AppStore = (props) => {
   const [groupName, setGroupName] = useState()
   const [groupPassword, setGroupPassword] = useState()
   const [groupExpenses, setGroupExpenses] = useState([])
+  const [sortedData, setSortedData] = useState([])
+  const [totalSpents, setTotalSpents] = useState(0)
+
+
 
   const addExpenses = async () => {
     setLoadingInExpensePage(true)
@@ -256,7 +260,11 @@ const AppStore = (props) => {
         groupName,
         groupPassword,
         setGroupExpenses,
-        groupExpenses
+        groupExpenses,
+        setSortedData,
+        sortedData,
+        setTotalSpents,
+        totalSpents
       }}
     >
       {props.children}

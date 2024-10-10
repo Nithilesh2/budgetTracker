@@ -7,6 +7,7 @@ import { TailSpin } from "react-loader-spinner"
 import axios from "axios"
 import { useCookies } from "react-cookie"
 import InitialsAvatar from "react-initials-avatar"
+import styles from "./GroupCss/GroupExpenses.module.css"
 
 const GroupExpenses = () => {
   const notifyFalse = (val) => {
@@ -21,15 +22,17 @@ const GroupExpenses = () => {
     setAmount,
     amount,
     enterKey,
-    loadingInExpensePage,
-    loadingDelete,
     setGroupExpenses,
     groupExpenses,
-    removeExpense,
+    setSortedData,
+    sortedData,
+    setTotalSpents,
+    totalSpents,
   } = useContext(AppContext)
 
   const [cookies] = useCookies(["groupId", "memberId", "memberName"])
-  const [totalSpents, setTotalSpents] = useState(0)
+  const [addLoading, setAddLoading] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
 
   useEffect(() => {
     const fetchGroupExpenses = async () => {
@@ -66,6 +69,7 @@ const GroupExpenses = () => {
       return
     }
     try {
+      setAddLoading(true)
       const cat = category.toLowerCase()
       await axios.post(
         `https://budgetplanner-backend-1.onrender.com/${cookies.groupId}/members/${cookies.memberId}/data`,
@@ -82,7 +86,7 @@ const GroupExpenses = () => {
       )
 
       const res = await axios.get(
-        `https://budgetplanner-backend-1.onrender.com//${cookies.groupId}/members/data`
+        `https://budgetplanner-backend-1.onrender.com/${cookies.groupId}/members/data`
         // `http://localhost:8875/${cookies.groupId}/members/data`
       )
       notifyTrue("Category added successfully")
@@ -98,8 +102,62 @@ const GroupExpenses = () => {
       setTotalSpents(spents)
       setCategory("")
       setAmount("")
+      setAddLoading(false)
     } catch (error) {
       console.error(error)
+    } finally {
+      setAddLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const sortedDate = (membersData) => {
+      return membersData.reduce((acc, member) => {
+        const withMemberName = member.dataByGroupMember.map((data) => ({
+          ...data,
+          memberName: member.memberName,
+        }))
+
+        const a = acc.concat(withMemberName)
+        return a.sort((y, z) => new Date(y.createdAt) - new Date(z.createdAt))
+      }, [])
+    }
+
+    const empArr = sortedDate(groupExpenses)
+    setSortedData(empArr)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupExpenses])
+
+  const removeExpense = async (dataId) => {
+    try {
+      setLoadingDelete(true)
+      await axios.delete(
+        `https://budgetplanner-backend-1.onrender.com/${cookies.groupId}/members/${cookies.memberId}/data/${dataId}`
+        // `http://localhost:8875/${cookies.groupId}/members/${cookies.memberId}/data/${dataId}`
+      )
+
+      const res = await axios.get(
+        `https://budgetplanner-backend-1.onrender.com/${cookies.groupId}/members/data`
+        // `http://localhost:8875/${cookies.groupId}/members/data`
+      )
+      notifyTrue("Category deleted successfully")
+      const membersData = res.data.membersData
+      setGroupExpenses(membersData)
+
+      const spents = membersData.reduce((total, member) => {
+        return (
+          total +
+          member.dataByGroupMember.reduce((sum, data) => sum + data.amount, 0)
+        )
+      }, 0)
+      setTotalSpents(spents)
+      setCategory("")
+      setAmount("")
+      setLoadingDelete(false)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoadingDelete(false)
     }
   }
 
@@ -131,12 +189,12 @@ const GroupExpenses = () => {
                 />
               </div>
               <div className="expenseAdd">
-                {loadingInExpensePage ? (
+                {addLoading ? (
                   <>
                     <button className="addExpenseBtn">
                       <ClipLoader
                         color="#D898D7"
-                        loading={loadingInExpensePage}
+                        loading={addLoading}
                         size={25}
                         aria-label="Loading Spinner"
                         data-testid="loader"
@@ -195,47 +253,52 @@ const GroupExpenses = () => {
                 </li>
               </ul>
               <ul className="expenseData">
-                {groupExpenses.length > 0 ? (
-                  groupExpenses.map((memberData) => {
-                    return memberData.dataByGroupMember.map((data) => (
-                      <li key={data._id} style={{ marginLeft: "0px" }}>
-                        <span
-                          className="expenseName"
-                          style={{
-                            overflowWrap: "break-word",
-                            maxWidth: "20%",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          {data.category}
+                {sortedData.length > 0 ? (
+                  sortedData.map((data) => (
+                    <li key={data._id} style={{ marginLeft: "0px" }}>
+                      <span
+                        className="expenseName"
+                        style={{
+                          overflowWrap: "break-word",
+                          maxWidth: "20%",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {data.category}
+                      </span>
+                      <span className="expenseCost">{data.amount}</span>
+                      <span className="expenseAction">
+                        {data.memberName === cookies.memberName ? (
+                          <i
+                            className="fa-solid fa-trash"
+                            onClick={() => removeExpense(data._id)}
+                          ></i>
+                        ) : (
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{ cursor: "not-allowed" }}
+                            title="You cannot delete this expense"
+                          ></i>
+                        )}
+                      </span>
+                      <span className={styles.expenseName}>
+                        <InitialsAvatar name={data.memberName} />
+                        <span className={styles.showMemberName}>
+                          {data.memberName}
                         </span>
-                        <span className="expenseCost">{data.amount}</span>
-                        <span className="expenseAction">
-                          {memberData.memberName === cookies.memberName ? (
-                            <i
-                              className="fa-solid fa-trash"
-                              onClick={() => removeExpense(data._id)}
-                            ></i>
-                          ) : (
-                            ""
-                          )}
-                        </span>
-                        <span className="expenseAction">
-                          <InitialsAvatar name={memberData.memberName} />
-                        </span>
-                        <span className="expenseDate">
-                          <div className="createdOrUpdated">
-                            {data.updatedAt === data.createdAt ? "(C)" : "(E)"}
-                          </div>
-                          <div className="date">
-                            {data.updatedAt
-                              ? new Date(data.updatedAt).toLocaleString()
-                              : "No Date Available"}
-                          </div>
-                        </span>
-                      </li>
-                    ))
-                  })
+                      </span>
+                      <span className="expenseDate">
+                        <div className={styles.createdOrUpdated}>
+                          {data.updatedAt === data.createdAt ? "(C)" : "(E)"}
+                        </div>
+                        <div className={styles.date}>
+                          {data.updatedAt
+                            ? new Date(data.updatedAt).toLocaleString()
+                            : "No Date Available"}
+                        </div>
+                      </span>
+                    </li>
+                  ))
                 ) : (
                   <div className="emptyExpenses">
                     No spending? Cool! 😎

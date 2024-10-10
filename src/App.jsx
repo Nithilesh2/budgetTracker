@@ -12,6 +12,7 @@ import JoinGroup from "./components/Group/JoinGroup";
 import GroupExpenses from "./components/Group/GroupExpenses";
 import GroupDashboard from "./components/Group/GroupDashboard";
 import GroupTrack from "./components/Group/GroupTrack";
+import GroupProofs from './components/Group/GroupProofs';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/expenses-group" element={<GroupExpenses />} />
           <Route path="/dashboard-group" element={<GroupDashboard />} />
           <Route path="/track-group" element={<GroupTrack />} />
+          <Route path="/proof-group" element={<GroupProofs />} />
 
           <Route
             path="/dashboard"
