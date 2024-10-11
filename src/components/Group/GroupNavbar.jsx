@@ -53,15 +53,6 @@ const GroupNavbar = () => {
               <li>
                 <div
                   onClick={() => {
-                    navigate("/proof-group")
-                  }}
-                >
-                  Proofs
-                </div>
-              </li>
-              <li>
-                <div
-                  onClick={() => {
                     navigate("/track-group")
                   }}
                 >

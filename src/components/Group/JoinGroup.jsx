@@ -31,10 +31,11 @@ const CreateGroup = () => {
   ])
 
   const joinBtnClicked = async () => {
-    const groupNames = groupNameRef.current.value
-    const groupPassword = groupPasswordRef.current.value
-    const groupUserName = groupUserNameRef.current.value
-    const groupUserPassword = groupUserPasswordRef.current.value
+    const groupNames = (groupNameRef.current.value).trim()
+    const groupPassword = (groupPasswordRef.current.value).trim()
+    const groupUserName = (groupUserNameRef.current.value).trim()
+    const firstCapGrpName = groupUserName.charAt(0).toUpperCase() + groupUserName.toLowerCase().slice(1)
+    const groupUserPassword = (groupUserPasswordRef.current.value).trim()
 
     if (groupNames === "") {
       notifyFalse("Group name is required")
@@ -42,7 +43,7 @@ const CreateGroup = () => {
     } else if (groupPassword === "") {
       notifyFalse("Group password is required")
       return
-    } else if (groupUserName === "") {
+    } else if (firstCapGrpName === "") {
       notifyFalse("Group member's name is required")
       return
     } else if (groupUserPassword === "") {
@@ -58,7 +59,7 @@ const CreateGroup = () => {
         {
           groupName: groupNames,
           groupPassword,
-          groupMembers: groupUserName,
+          groupMembers: firstCapGrpName,
           groupMembersPassword: groupUserPassword,
         },
         {
@@ -78,28 +79,28 @@ const CreateGroup = () => {
       if (userId) {
         setCookies("memberId", userId, {
           path: "/",
-          maxAge: 600,
+          maxAge: 6000,
           sameSite: "strict",
         })
       }
       if (userName) {
         setCookies("memberName", userName, {
           path: "/",
-          maxAge: 600,
+          maxAge: 6000,
           sameSite: "strict",
         })
       }
       if (groupName) {
         setCookies("groupId", groupId, {
           path: "/",
-          maxAge: 600,
+          maxAge: 6000,
           sameSite: "strict",
         })
       }
       if (groupId) {
         setCookies("groupName", groupName, {
           path: "/",
-          maxAge: 600,
+          maxAge: 6000,
           sameSite: "strict",
         })
       }
