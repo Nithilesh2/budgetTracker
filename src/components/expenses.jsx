@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import AppContext from "../context/AppContext"
 import "../css/expenses.css"
 import Navbar from "./navbar"
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
 import ClipLoader from "react-spinners/ClipLoader"
@@ -35,6 +35,8 @@ function Expenses() {
   //to remove when user is deleted data
   const [loadingDelete, setLoadingDelete] = useState(false)
 
+  const notifyTrue = (val) => toast.success(`${val}`)
+
   useEffect(() => {
     if (cookies.userId === undefined) {
       navigate("/")
@@ -57,6 +59,7 @@ function Expenses() {
       await axios.delete(
         `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data/${dataId}`
       )
+      notifyTrue("Category deleted successfully")
       setDeleted(false)
     } catch (error) {
       console.error("Error deleting expense:", error)

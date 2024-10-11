@@ -70,6 +70,7 @@ const AppStore = (props) => {
             { headers: { "Content-Type": "application/json" } }
           )
           setExpenses(response.data)
+          notifyTrue("Category added successfully")
         } catch (error) {
           console.error("Error fetching expenses:", error)
         } finally {

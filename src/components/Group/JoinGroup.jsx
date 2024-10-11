@@ -79,33 +79,33 @@ const CreateGroup = () => {
       if (userId) {
         setCookies("memberId", userId, {
           path: "/",
-          maxAge: 6000,
+          maxAge: 600,
           sameSite: "strict",
         })
       }
       if (userName) {
         setCookies("memberName", userName, {
           path: "/",
-          maxAge: 6000,
+          maxAge: 600,
           sameSite: "strict",
         })
       }
       if (groupName) {
         setCookies("groupId", groupId, {
           path: "/",
-          maxAge: 6000,
+          maxAge: 600,
           sameSite: "strict",
         })
       }
       if (groupId) {
         setCookies("groupName", groupName, {
           path: "/",
-          maxAge: 6000,
+          maxAge: 600,
           sameSite: "strict",
         })
       }
     } catch (error) {
-      console.error("Error Data:", error.response.data)
+      notifyFalse(error.response.data.message)
     } finally {
       setLoading(false)
     }
