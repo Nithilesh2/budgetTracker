@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { ToastContainer } from "react-toastify"
 import styles from "./GroupCss/GroupTrack.module.css"
 import GroupNavbar from "./GroupNavbar"
@@ -24,6 +24,8 @@ const Track = () => {
   } = useContext(AppContext)
 
   const [cookies] = useCookies(["groupId", "memberId", "memberName"])
+
+  const [perMember, SetPerMember] = useState(0)
 
   useEffect(() => {
     const fetchGroupExpenses = async () => {
@@ -112,8 +114,8 @@ const Track = () => {
   const getMembersSpents = (memberId) => {
     const memberSpents = groupExpenses
       .filter((data) => memberId === data.memberId)
-      .flatMap((data) => 
-         data.dataByGroupMember.map((expense) => ({
+      .flatMap((data) =>
+        data.dataByGroupMember.map((expense) => ({
           ...expense,
           memberName: data.memberName,
         }))
@@ -121,6 +123,16 @@ const Track = () => {
     setFilterData(memberSpents)
   }
 
+  useEffect(()=>{
+    const totalGroupMembers = groupExpenses.length
+
+    const totalMembersSpents = groupExpenses.reduce((acc, spents) => {
+      return acc + spents.spents
+    }, 0)
+
+    const perMemberSpents = totalMembersSpents / totalGroupMembers
+    SetPerMember(perMemberSpents)
+  },[groupExpenses])
 
   return (
     <>
@@ -179,10 +191,18 @@ const Track = () => {
                     >
                       <option value="">---Select Member---</option>
                       {groupExpenses.map((data) => (
-                        <option key={data._id} value={data.memberId}>{data.memberName}</option>
+                        <option key={data._id} value={data.memberId}>
+                          {data.memberName}
+                        </option>
                       ))}
                     </select>
                   </div>
+                  {/* <div className={styles.groupMembersSpents}>
+                    <p>Group Split</p>
+                    <button className={styles.split} onClick={splitSpents}>
+                      Split
+                    </button>
+                  </div> */}
                   <div className={styles.sortByDate}>
                     <p>Get Date</p>
                     <input
@@ -206,7 +226,9 @@ const Track = () => {
           <div className="middleRight">
             <div className={styles.middleRightTopTrack}>
               <div className={styles.budgetBoxTrack}>
-                <span className="showBudget">Total : ₹{totalAmount}</span>
+                <span className="showBudget">Total : ₹{totalAmount}</span>{" "}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span className="showBudget">Per Member : ₹{Math.round(perMember)}</span>
               </div>
             </div>
             <div className="middleRightBottom">
@@ -244,10 +266,20 @@ const Track = () => {
                     )
                   })
                 ) : (
-                  <div className="emptyExpenses">
-                    Forget where your money went? 💸 Try this to track to get
-                    remember your expenses with us! 📊
-                  </div>
+                  groupExpenses.map((data, index) => (
+                    <>
+                      <div className={styles.splitN} key={index}>
+                        <p>{data.memberName} has spents: {data.spents}</p>
+                      </div>
+                      <div className={styles.splitO}>
+                        
+                        {Math.round(data.spents - perMember)>0? 
+                          <p>{data.memberName} Should get: {Math.round(data.spents - perMember)}</p>
+                        :
+                         <p>{data.memberName} Should pay: {Math.round(-(data.spents - perMember))}</p>}
+                      </div>
+                    </>
+                  ))
                 )}
               </ul>
             </div>

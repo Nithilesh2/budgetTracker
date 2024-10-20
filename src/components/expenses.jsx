@@ -9,6 +9,7 @@ import ClipLoader from "react-spinners/ClipLoader"
 import { useCookies } from "react-cookie"
 import { TailSpin } from "react-loader-spinner"
 import { useNavigate } from "react-router-dom"
+import Modal from "react-modal"
 
 function Expenses() {
   const {
@@ -27,8 +28,10 @@ function Expenses() {
     expenses,
     loadingInExpensePage,
     amountFromDb,
-    setDeleted
+    setDeleted,
   } = useContext(AppContext)
+
+  Modal.setAppElement("#root")
 
   const [cookies] = useCookies(["userId", "userName"])
   const navigate = useNavigate()
@@ -51,7 +54,6 @@ function Expenses() {
     setRemaining(remaining)
   }, [expenses, setSpents, setRemaining, amountFromDb, spents])
 
-
   const removeExpense = async (dataId) => {
     setLoadingDelete(true)
     try {
@@ -71,6 +73,17 @@ function Expenses() {
     }
   }
 
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
+
+  const openModal = (category) => {
+    setSelectedCategory(category)
+    setModalIsOpen(true)
+  }
+
+  const closeModal = () => {
+    setModalIsOpen(false)
+  }
   return (
     <>
       <main className="mainExpense">
@@ -175,7 +188,74 @@ function Expenses() {
                   expenses.map((data) => {
                     return (
                       <li key={data._id}>
-                        <span className="expenseName">{data.category}</span>
+                        <span
+                          className="expenseName"
+                          onClick={() => openModal(data)}
+                        >
+                          {data.category}
+                        </span>
+                        <div key={data._id}>
+                          <Modal
+                            isOpen={modalIsOpen}
+                            onRequestClose={closeModal}
+                            contentLabel="Example Modal"
+                          >
+                            {selectedCategory && (
+                              <>
+                                <h2 className="modalOverAll">
+                                  Overall Spents for {""}
+                                  {selectedCategory
+                                    ? selectedCategory.category
+                                    : ""}
+                                </h2>
+                                <p className="modalTotalAmountSpent">
+                                  Total Amount Spent: ₹
+                                  {selectedCategory
+                                    ? selectedCategory.amount
+                                    : 0}
+                                </p>
+                                <ul className="modalUl">
+                                  <li className="modalLi">
+                                    <span className="expenseName">Amount</span>
+                                    <span className="expenseCost">Created</span>
+                                  </li>
+                                </ul>
+                                <ul className="modalUlData">
+                                  {selectedCategory.history &&
+                                  selectedCategory.history.length > 0 ? (
+                                    selectedCategory.history.map(
+                                      (historyItem) => (
+                                        <li
+                                          key={historyItem._id}
+                                          className="modalLiData"
+                                        >
+                                          <span className="expenseName">
+                                            {historyItem.amount}
+                                          </span>
+                                          <span className="expenseCost">
+                                            {new Date(
+                                              historyItem.date
+                                            ).toLocaleString()}
+                                          </span>
+                                        </li>
+                                      )
+                                    )
+                                  ) : (
+                                    <p>No history available</p>
+                                  )}
+                                </ul>
+                                <div className="modalCloseButtonBox">
+                                  <button
+                                    onClick={closeModal}
+                                    className="modalCloseButton"
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </Modal>
+                        </div>
                         <span className="expenseCost">{data.amount}</span>
                         <span className="expenseAction">
                           <i

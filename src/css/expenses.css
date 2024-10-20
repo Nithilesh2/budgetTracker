@@ -4,6 +4,7 @@
   box-sizing: border-box;
   list-style-type: none;
   background: rgb(216 152 215);
+  font-family: "Poppins", sans-serif;
 }
 
 .mainExpense {
@@ -218,7 +219,7 @@ input::selection {
   align-items: center;
   justify-content: center;
 }
-.emptyExpenses{
+.emptyExpenses {
   margin-left: 17px;
 }
 input {
@@ -472,6 +473,61 @@ ion-icon {
   cursor: default;
 }
 
+.modalOverAll,
+.modalTotalAmountSpent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 0 0 0;
+  cursor: default;
+}
+.modalUl {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modalLi {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.modalUlData {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  position: relative;
+}
+.modalLiData {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.modalCloseButtonBox {
+  height: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modalCloseButton {
+  font-size: 1rem;
+  font-weight: 600;
+  height: 35px;
+  width: 100px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
 @media screen and (max-width: 1050px) {
   .createdOrUpdated {
     width: 25%;
@@ -524,10 +580,8 @@ ion-icon {
   }
 
   ul li {
-    /* display: none; */
     display: block;
   }
-
   .menu {
     display: block;
     background: none;
@@ -708,6 +762,17 @@ ion-icon {
   }
   .date {
     font-size: 0.8rem;
+  }
+  .modalOverAll,
+  .modalTotalAmountSpent,
+  .modalUl,
+  .modalLi,
+  .modalUlData,
+  .modalCloseButton {
+    font-size: 0.75rem;
+  }.modalCloseButton{
+    height: 28px;
+    width: 75px;
   }
 }
 

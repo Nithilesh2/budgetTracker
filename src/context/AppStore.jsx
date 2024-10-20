@@ -39,8 +39,6 @@ const AppStore = (props) => {
   const [sortedData, setSortedData] = useState([])
   const [totalSpents, setTotalSpents] = useState(0)
 
-
-
   const addExpenses = async () => {
     setLoadingInExpensePage(true)
     const parAmount = parseInt(amount)
@@ -54,7 +52,8 @@ const AppStore = (props) => {
             {
               category: categoryLowerCase,
               amount: parAmount,
-            }
+            },
+            { headers: { "Content-Type": "application/json" } }
           )
           setLoadingInExpensePage(false)
         } catch (error) {
@@ -67,7 +66,7 @@ const AppStore = (props) => {
           const response = await axios.get(
             `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}`,
             // `http://localhost:8875/users/${cookies.userId}`,
-            { headers: { "Content-Type": "application/json" } }
+            { method: "GET", headers: { "Content-Type": "application/json" } }
           )
           setExpenses(response.data)
           notifyTrue("Category added successfully")
@@ -201,7 +200,10 @@ const AppStore = (props) => {
   const searchFilter = () => {
     const searchFilterData = expenses.filter((data) => {
       if (search.toLowerCase() !== "" && amount !== "") {
-        return data.category === search.toLowerCase() && data.amount === parseInt(amount)
+        return (
+          data.category === search.toLowerCase() &&
+          data.amount === parseInt(amount)
+        )
       } else if (search.toLowerCase() !== "" && amount === "") {
         return data.category === search.toLowerCase()
       } else if (search.toLowerCase() === "" && amount !== "") {
@@ -214,12 +216,11 @@ const AppStore = (props) => {
     setAmount("")
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setTotalAmount(filterData.reduce((acc, curr) => acc + curr.amount, 0))
-  },[filterData])
+  }, [filterData])
 
   //Group
-
 
   return (
     <AppContext.Provider
@@ -265,7 +266,7 @@ const AppStore = (props) => {
         setSortedData,
         sortedData,
         setTotalSpents,
-        totalSpents
+        totalSpents,
       }}
     >
       {props.children}
