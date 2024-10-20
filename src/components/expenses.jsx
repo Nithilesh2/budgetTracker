@@ -10,6 +10,7 @@ import { useCookies } from "react-cookie"
 import { TailSpin } from "react-loader-spinner"
 import { useNavigate } from "react-router-dom"
 import Modal from "react-modal"
+import { FaExclamationCircle } from "react-icons/fa"
 
 function Expenses() {
   const {
@@ -173,7 +174,15 @@ function Expenses() {
               ""
             )}
             <div className="middleRightBottom">
-              <div className="myExpenses">My Expenses</div>
+              <div className="myExpenses">
+                My Expenses{" "}
+                <FaExclamationCircle
+                  style={{ fontSize: "1rem" }}
+                  onClick={() =>
+                    notifyTrue("🔍 Tap the category name to see detailed expenses")
+                  }
+                />
+              </div>
               <hr className="hr" />
               <ul className="expenseHeading">
                 <li>
