@@ -32,7 +32,7 @@ const GroupNavbar = () => {
         <div className="navbar">
           <div className="expenseTracker">
             <img
-              src="https://expense-tracker.iprog.tech/assets/main-logo-4574ab8c0203e45ee4fb8a91459f1337c1659a651c1a5ebcbb80fc5e89897d62.png"
+              src="https://downloadr2.apkmirror.com/wp-content/uploads/2021/01/01/5ffd9b2ead653-384x384.png"
               alt="logo"
               onClick={() => {
                 navigate("/dashboard-group")
