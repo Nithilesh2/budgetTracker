@@ -23,6 +23,11 @@ export default function Login() {
 
   const submitBtnClicked = async (eve) => {
     eve.preventDefault()
+    setTimeout(() => {
+      notifyRed(
+        "🔒 Please note that logging in may take some time due to server limitations."
+      )
+    }, 5000)
 
     const email = emailRef.current.value
     const password = passwordRef.current.value
@@ -151,8 +156,7 @@ export default function Login() {
             </div>
             <div className="signUp">
               <h5>Doesn't have an account?</h5>
-              <Link style={{color: "#F1EFF2"}} to="/signup"
-              >
+              <Link style={{ color: "#F1EFF2" }} to="/signup">
                 SignUp
               </Link>
             </div>

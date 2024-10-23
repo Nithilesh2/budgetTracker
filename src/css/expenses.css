@@ -75,9 +75,9 @@ input::selection {
 
 .expenseTracker img {
   cursor: pointer;
-  aspect-ratio: 8/4;
-  width: 160px;
-  margin: 50px 0 0 40px;
+    aspect-ratio: 3 / 3;
+    width: 90px;
+    margin: 50px 0 0 40px;
 }
 
 .navitems,

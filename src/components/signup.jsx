@@ -61,6 +61,9 @@ export default function SignUp() {
   }
   const signupbtnClicked = async (event) => {
     event.preventDefault()
+    setTimeout(() => {
+      notifyRed("📝 Please be aware that signing up may take some time due to server limitations.")
+    }, 5000);
     if (name === "") {
       notifyRed("Name is empty")
     } else if (email === "") {
@@ -210,7 +213,9 @@ export default function SignUp() {
           </div>
           <div className="logIn">
             <h5>Already have any account?</h5>
-            <Link style={{ color: "#F1EFF2", textDecoration: "none"}} to="/login" 
+            <Link
+              style={{ color: "#F1EFF2", textDecoration: "none" }}
+              to="/login"
             >
               Login
             </Link>
