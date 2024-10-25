@@ -195,11 +195,7 @@ const AppStore = (props) => {
         )
         setAmountFromDb(response.data.budget)
       } catch (error) {
-        if (error.response) {
-          notifyRed(error.response.data.message)
-        } else {
-          notifyRed("Something went wrong...")
-        }
+        console.error("Error fetching expenses:", error)
       }
     }
 
