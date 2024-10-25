@@ -114,7 +114,6 @@ const GroupDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookies.groupId, setGroupExpenses])
 
-  console.log(groupExpenses)
 
   useEffect(() => {
     const sortedDate = (membersData) => {

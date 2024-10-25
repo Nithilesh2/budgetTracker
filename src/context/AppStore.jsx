@@ -39,6 +39,10 @@ const AppStore = (props) => {
   const [sortedData, setSortedData] = useState([])
   const [totalSpents, setTotalSpents] = useState(0)
 
+  const notifyRed = (val) => {
+    toast.error(`${val}`)
+  }
+
   const addExpenses = async () => {
     setLoadingInExpensePage(true)
     const parAmount = parseInt(amount)
@@ -105,7 +109,11 @@ const AppStore = (props) => {
         setBudgetChanged(false)
         notifyTrue(response.data.message)
       } catch (error) {
-        console.log("Error getting while changing budget: ", error)
+        if (error.response) {
+          notifyRed(error.response.data.message)
+        } else {
+          notifyRed("Something went wrong...")
+        }
         setBudgetChanged(false)
       } finally {
         setBudgetChanged(false)
@@ -187,7 +195,11 @@ const AppStore = (props) => {
         )
         setAmountFromDb(response.data.budget)
       } catch (error) {
-        console.log("Error fetching budget:", error)
+        if (error.response) {
+          notifyRed(error.response.data.message)
+        } else {
+          notifyRed("Something went wrong...")
+        }
       }
     }
 
