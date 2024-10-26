@@ -15,27 +15,9 @@ const GroupDashboard = () => {
   } = useContext(AppContext)
 
   const [cookies] = useCookies(["groupId", "memberId", "memberName"])
-  // const [getMemberId, setGetMemberId] = useState()
-  // const [getMemberData, setGetMemberData] = useState([])
 
   const category = sortedData.map((data) => data.category)
   const amount = sortedData.map((data) => data.amount)
-
-  // useEffect(() => {
-  //   const getMemberData = groupExpenses.filter((data) => {
-  //     if (data.memberId === getMemberId) {
-  //       return data.dataByGroupMember
-  //     }
-  //     return false
-  //   })
-  //   console.log("getmemberdata: ",getMemberData)
-  //   const mapData = getMemberData.map((data) => {
-  //     return data.dataByGroupMember
-  //   }).flat()
-  //   console.log("getMapData: ",mapData)
-
-  //   setGetMemberData(getMemberData)
-  // }, [getMemberId, groupExpenses])
 
 
   const userData = {
@@ -56,24 +38,6 @@ const GroupDashboard = () => {
       },
     ],
   }
-  // const userData2 = {
-  //   labels: getMemberData.category,
-  //   datasets: [
-  //     {
-  //       label: `Group Expenses`,
-  //       data: getMemberData.amount,
-  //       backgroundColor: [
-  //         "rgba(219, 112, 147, 0.6)",
-  //         "rgba(230, 230, 250, 0.6)",
-  //         "rgba(255, 192, 203, 0.6)",
-  //         "rgba(240, 128, 128, 0.6)",
-  //         "rgba(218, 112, 214, 0.6)",
-  //         "rgba(147, 112, 219, 0.6)",
-  //       ],
-  //       borderWidth: 2,
-  //     },
-  //   ],
-  // }
 
   const options = {
     maintainAspectRatio: false,
@@ -137,6 +101,9 @@ const GroupDashboard = () => {
     <>
       <main className="mainExpense">
         <GroupNavbar />
+        <h1 className="greetings">
+            {`Welcome back, ${cookies.memberName}` || "Welcome back, Guest"}
+          </h1>
 
         <div className="bar1">
           <Bar
@@ -145,22 +112,6 @@ const GroupDashboard = () => {
             data={userData}
           />
         </div>
-
-        {/* <div className="bar2">
-          <select onClick={(eve) => setGetMemberId(eve.target.value)}>
-            <option value="">Select Member</option>
-            {groupExpenses.map((data) => (
-              <option key={data.memberId} value={data.memberId}>
-                {data.memberName}
-              </option>
-            ))}
-          </select>
-          <Bar
-            options={options}
-            style={{ width: "200px", height: "250px" }}
-            data={userData2}
-          /> */}
-        {/* </div> */}
       </main>
     </>
   )

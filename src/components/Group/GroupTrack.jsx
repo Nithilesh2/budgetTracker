@@ -197,12 +197,6 @@ const Track = () => {
                       ))}
                     </select>
                   </div>
-                  {/* <div className={styles.groupMembersSpents}>
-                    <p>Group Split</p>
-                    <button className={styles.split} onClick={splitSpents}>
-                      Split
-                    </button>
-                  </div> */}
                   <div className={styles.sortByDate}>
                     <p>Get Date</p>
                     <input

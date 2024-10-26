@@ -127,6 +127,7 @@ export default function SignUp() {
     const name = decodedData.given_name
 
     try {
+      setLoading(true)
       const response = await axios.post(
         "https://budgetplanner-backend-1.onrender.com/googleSignup",
         // "http://localhost:8875/googleSignup",
@@ -152,6 +153,9 @@ export default function SignUp() {
       else{
         notifyRed("Something went wrong")
       }
+    }
+    finally{
+      setLoading(false)
     }
   }
 
