@@ -61,6 +61,7 @@
   width: 90%;
   border-radius: 15px;
   background-color: rgb(235 235 235 / 74%);
+  overflow-y: scroll;
 }
 .top,
 .bottom {
@@ -192,20 +193,53 @@
     font-size: 0.75rem;
   }
 }
+
 @media print {
   .main {
+    height: auto;
+    width: 100%;
     flex-direction: column;
-    margin-top: 200px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+    overflow: hidden;
   }
   .chartAndBar {
-    flex-direction: row;
-    height: 100%;
+    gap: 6rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-right: 200px;
-    margin-bottom: 150px;
+    justify-content: space-evenly;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  .chartAndBar .bar1,
+  .chartAndBar .bar2 {
+    width: 150px;
+    height: 150px;
   }
   .button {
     display: none;
+  }
+  .paper {
+    width: 100%;
+    margin-top: 10rem;
+    height: auto;
+    padding: 10px;
+    border: none;
+    overflow: hidden;
+    background-color: white;
+  }
+  .details,
+  .spentsBudget,
+  .totalSpents {
+    font-size: 0.9rem;
+  }
+  .spentsBudget .top,
+  .spentsBudget .bottom li,
+  .printAndTotal {
+    padding: 4px 0;
   }
 }

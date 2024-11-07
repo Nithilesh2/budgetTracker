@@ -108,7 +108,6 @@ const Track = () => {
                 </button>
                 <ToastContainer newestOnTop autoClose={2000} />
               </div>
-              {/* {`SELECT ${search !== ""? `${search}`: ""} ${search !== "" && amount !== ""? `,`: ""} ${amount !== ""? `${amount}`: ""} `} */}
               <div className={styles.filterOptions}>
                 <div className={styles.filterBox}>
                   <div className={styles.filter}>Filter</div>
