@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
 import ClipLoader from "react-spinners/ClipLoader"
+import { useCookies } from "react-cookie";
 
 export default function SignUp() {
   const notifyGreen = (val) => toast.success(`${val}`)
@@ -22,6 +23,8 @@ export default function SignUp() {
   const [pass, setPass] = useState(0)
   const [confirmPass, setConfirmPass] = useState(0)
   const [loading, setLoading] = useState(false)
+
+  const [, setCookies] = useCookies(["userId", "userName"])
 
   const nameChanging = (eve) => {
     setName(eve.target.value)
@@ -121,8 +124,8 @@ export default function SignUp() {
   }
 
   const handleOnSuccess = async (res)=>{
-    const token = res.credential
-    const decodedData = jwtDecode(token)
+    const utoken = res.credential
+    const decodedData = jwtDecode(utoken)
     const email = decodedData.email
     const name = decodedData.given_name
 
@@ -134,7 +137,7 @@ export default function SignUp() {
         {
           name,
           email,
-          token
+          token: utoken
         },
         {
           headers: {
@@ -143,8 +146,24 @@ export default function SignUp() {
         }
       )
       notifyGreen(response.data.message || "User registered successfully!")
+      const { token } = response.data
+      const decodeToken = jwtDecode(token)
+      if (decodeToken.id) {
+        setCookies("userId", decodeToken.id, {
+          path: "/",
+          maxAge: 600,
+          sameSite: "strict",
+        })
+      }
+      if (decodeToken.name) {
+        setCookies("userName", decodeToken.name, {
+          path: "/",
+          maxAge: 600,
+          sameSite: "strict",
+        })
+      }
       setTimeout(() => {
-        navigate("/")
+        navigate("/dashboard")
       }, 2000)
     } catch(error) {
       if (error.response) {
