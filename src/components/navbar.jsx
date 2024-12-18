@@ -2,7 +2,8 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useCookies } from "react-cookie"
-
+import logo from "../assets/favicon.png"
+ 
 function Navbar() {
   const navigate = useNavigate()
   const [menu, setMenu] = useState(true)
@@ -30,7 +31,7 @@ function Navbar() {
         <div className="navbar">
           <div className="expenseTracker">
             <img
-              src="https://downloadr2.apkmirror.com/wp-content/uploads/2021/01/01/5ffd9b2ead653-384x384.png"
+              src={logo}
               alt="logo"
               onClick={() => {
                 navigate("/dashboard")
