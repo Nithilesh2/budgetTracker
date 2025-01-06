@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import styles from "../css/PrintPage.module.css"
 import AppContext from "../context/AppContext"
 import { Bar, Pie } from "react-chartjs-2"
+import Navbar from "./navbar"
 
 const PrintPage = () => {
   const date = new Date()
@@ -41,6 +42,9 @@ const PrintPage = () => {
 
   return (
     <>
+      <div className={styles.navbar}>
+        <Navbar />
+      </div>
       <div className={styles.main}>
         <div className={styles.chartAndBar}>
           <div className="bar1" style={{ width: "70%" }}>

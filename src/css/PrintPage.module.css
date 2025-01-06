@@ -195,6 +195,9 @@
 }
 
 @media print {
+  .navbar{
+    display: none;
+   }
   .main {
     height: auto;
     width: 100%;
