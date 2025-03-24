@@ -75,9 +75,9 @@ input::selection {
 
 .expenseTracker img {
   cursor: pointer;
-    aspect-ratio: 3 / 3;
-    width: 90px;
-    margin: 50px 0 0 40px;
+  aspect-ratio: 3 / 3;
+  width: 90px;
+  margin: 50px 0 0 40px;
 }
 
 .navitems,
@@ -184,7 +184,8 @@ input::selection {
 
 .expenseCategory,
 .expenseAmount,
-.expenseAdd {
+.expenseAdd,
+.expenseImage {
   height: auto;
   width: 100%;
   display: flex;
@@ -222,7 +223,8 @@ input::selection {
 .emptyExpenses {
   margin-left: 17px;
 }
-input {
+input,
+.uploadButton {
   height: 45px;
   max-width: 550px;
   width: 100%;
@@ -603,7 +605,8 @@ ion-icon {
     width: 35%;
   }
 
-  input {
+  input,
+  .uploadButton {
     max-width: 230px;
     width: 100%;
     border-radius: 20px;
@@ -688,7 +691,8 @@ ion-icon {
     width: 100%;
     margin: 0;
   }
-  input {
+  input,
+  .uploadButton {
     max-width: 400px;
     width: 90%;
     font-size: 0.9rem;
@@ -770,7 +774,8 @@ ion-icon {
   .modalUlData,
   .modalCloseButton {
     font-size: 0.75rem;
-  }.modalCloseButton{
+  }
+  .modalCloseButton {
     height: 28px;
     width: 75px;
   }

@@ -1,8 +1,10 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import Navbar from "./navbar"
 import AppContext from "../context/AppContext"
 import { ToastContainer } from "react-toastify"
 import styles from "../css/Track.module.css"
+import "yet-another-react-lightbox/styles.css"
+import Lightbox from "yet-another-react-lightbox"
 
 const Track = () => {
   const {
@@ -18,6 +20,20 @@ const Track = () => {
     setFilterData,
     expenses,
   } = useContext(AppContext)
+
+  const [open, setOpen] = useState(false)
+  const [selectedImages, setSelectedImages] = useState([])
+  const BASE_URL = "https://budgetplanner-backend-1.onrender.com"
+
+  const handleImageClick = (historyImages) => {
+    const imageSlides = historyImages
+      .filter((item) => item.image)
+      // .map((item) => ({ src: `http://localhost:8875/${item.image}` }))
+      .map((item) => ({ src: `${BASE_URL}/${item.image}` }))
+
+    setSelectedImages(imageSlides)
+    setOpen(true)
+  }
 
   const dateChanged = (eve) => {
     const retriveDataAccToDate = expenses.filter((data) => {
@@ -71,6 +87,7 @@ const Track = () => {
     setFilterData([])
   }
 
+  console.log(filterData)
   return (
     <>
       <main className="mainExpense">
@@ -158,21 +175,42 @@ const Track = () => {
             <div className="middleRightBottom">
               <div className="myExpenses">My Expenses</div>
               <hr className="hr" />
+
               <ul className="expenseHeading">
                 <li>
                   <span className="expenseName">Category</span>
+                  <span className="expenseImage">Image</span>
                   <span className="expenseCost">Amount</span>
                   <span className="expenseDetails">Created</span>
                 </li>
               </ul>
+
               <ul className="expenseData">
                 {filterData.length > 0 ? (
                   filterData.map((data) => {
+                    const firstImage = data.history.find(
+                      (item) => item.image
+                    )?.image
+
                     return (
                       <li key={data._id}>
                         <span className="expenseName">{data.category}</span>
+                        <span className="expenseImage">
+                          {firstImage ? (
+                            <img
+                              // src={`http://localhost:8875/${firstImage}`}
+                              src={`${BASE_URL}/${firstImage}`}
+                              alt="expense"
+                              width="50"
+                              height="50"
+                              style={{ cursor: "pointer", margin: "5px" }}
+                              onClick={() => handleImageClick(data.history)}
+                            />
+                          ) : (
+                            "No Image"
+                          )}
+                        </span>
                         <span className="expenseCost">{data.amount}</span>
-
                         <span className="expenseDate">
                           <div className="createdOrUpdated">
                             {data.updatedAt === data.createdAt ? "(C)" : "(E)"}
@@ -188,12 +226,17 @@ const Track = () => {
                   })
                 ) : (
                   <div className="emptyExpenses">
-                    Forget where your money went? 💸 Try this to track to get
-                    remember your expenses with us! 📊
+                    Forget where your money went? 💸 Try this to track your
+                    expenses! 📊
                   </div>
                 )}
               </ul>
             </div>
+            <Lightbox
+              open={open}
+              close={() => setOpen(false)}
+              slides={selectedImages}
+            />
           </div>
         </div>
       </main>

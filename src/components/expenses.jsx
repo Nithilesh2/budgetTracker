@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react"
 import AppContext from "../context/AppContext"
 import "../css/expenses.css"
@@ -30,6 +31,9 @@ function Expenses() {
     loadingInExpensePage,
     amountFromDb,
     setDeleted,
+    setImage,
+    setPreview,
+    preview
   } = useContext(AppContext)
 
   Modal.setAppElement("#root")
@@ -45,7 +49,6 @@ function Expenses() {
     if (cookies.userId === undefined) {
       navigate("/")
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookies.userId])
 
   useEffect(() => {
@@ -85,6 +88,19 @@ function Expenses() {
   const closeModal = () => {
     setModalIsOpen(false)
   }
+
+  const handleImage = (eve) => {
+    const file = eve.target.files[0]
+    setImage(file)
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
   return (
     <>
       <main className="mainExpense">
@@ -112,6 +128,37 @@ function Expenses() {
                   onKeyPress={enterKey}
                 />
               </div>
+              <div
+                className="expenseImage"
+                style={{ position: "relative", marginTop: "2rem" }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    right: "0",
+                    fontWeight: 500,
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  optional
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImage}
+                  id="hiddenFileInput"
+                  style={{ display: "none" }}
+                />
+                <button
+                  onClick={() =>
+                    document.getElementById("hiddenFileInput").click()
+                  }
+                  className="uploadButton"
+                >
+                  Upload Image
+                </button>
+              </div>
               <div className="expenseAdd">
                 {loadingInExpensePage ? (
                   <>
@@ -138,6 +185,34 @@ function Expenses() {
                 <ToastContainer newestOnTop autoClose={2000} />
               </div>
             </div>
+            {preview && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "1.5rem",
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: "1.3rem",
+                    fontWeight: 500,
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  Image Preview:
+                </h3>
+                <img
+                  src={preview}
+                  alt="Preview"
+                  style={{ width: "200px", marginTop: "10px" }}
+                />
+              </div>
+            )}
           </div>
           <div className="vline"></div>
           <hr className="vlineAfter" />
@@ -179,7 +254,9 @@ function Expenses() {
                 <FaExclamationCircle
                   style={{ fontSize: "1rem" }}
                   onClick={() =>
-                    notifyTrue("🔍 Tap the category name to see detailed expenses")
+                    notifyTrue(
+                      "🔍 Tap the category name to see detailed expenses"
+                    )
                   }
                 />
               </div>

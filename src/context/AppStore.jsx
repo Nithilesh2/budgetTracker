@@ -19,6 +19,8 @@ const AppStore = (props) => {
   const [categoryAmount, setCategoryAmount] = useState({})
   const [quote, setQuote] = useState("")
   const [deleted, setDeleted] = useState(false)
+  const [image, setImage] = useState(null)
+  const [preview, setPreview] = useState(null)
 
   //track
   const [search, setSearch] = useState("")
@@ -46,19 +48,27 @@ const AppStore = (props) => {
   const addExpenses = async () => {
     setLoadingInExpensePage(true)
     const parAmount = parseInt(amount)
+
     if (category !== "") {
       if (amount !== "") {
         const categoryLowerCase = category.toLowerCase()
+
+        const formData = new FormData()
+        formData.append("category", categoryLowerCase)
+        formData.append("amount", Number(parAmount))
+
+        if (image) {
+          formData.append("image", image)
+        }
+
         try {
           await axios.post(
             `https://budgetplanner-backend-1.onrender.com/users/${cookies.userId}/data`,
             // `http://localhost:8875/users/${cookies.userId}/data`,
-            {
-              category: categoryLowerCase,
-              amount: parAmount,
-            },
-            { headers: { "Content-Type": "application/json" } }
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
           )
+
           setLoadingInExpensePage(false)
         } catch (error) {
           console.error(error)
@@ -73,19 +83,22 @@ const AppStore = (props) => {
             { method: "GET", headers: { "Content-Type": "application/json" } }
           )
           setExpenses(response.data)
+          console.log(response.data)
           notifyTrue("Category added successfully")
         } catch (error) {
           console.error("Error fetching expenses:", error)
         } finally {
           setAmount("")
           setCategory("")
+          setImage(null)
+          setPreview(null)
           setLoadingInExpensePage(false)
         }
       } else {
         notifyFalse("Empty amount, you should mention the amount")
         setLoadingInExpensePage(false)
       }
-    } else if (category === "") {
+    } else {
       notifyFalse("Empty category, you should mention the category")
       setLoadingInExpensePage(false)
     }
@@ -264,6 +277,10 @@ const AppStore = (props) => {
         totalAmount,
         setTotalAmount,
         searchFilter,
+        setImage,
+        image,
+        setPreview,
+        preview,
         //Group
         setGroupName,
         setGroupPassword,
