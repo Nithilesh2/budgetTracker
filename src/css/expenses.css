@@ -141,21 +141,18 @@ input::selection {
   cursor: pointer;
   top: 17px;
 }
-
 .menu,
 .menu-active {
   right: 20px;
   position: absolute;
   display: none;
 }
-
 .close,
 .close-active {
   right: 20px;
   position: absolute;
   display: none;
 }
-
 .middle {
   height: auto;
   width: 100%;
@@ -166,14 +163,12 @@ input::selection {
   font-family: "Poppins", sans-serif;
   transition: all 0.3s;
 }
-
 .middleLeft {
   height: 100%;
   width: 40%;
   margin-left: 10px;
   transition: all 0.3s;
 }
-
 .addData {
   height: 100%;
   width: 100%;
@@ -181,7 +176,6 @@ input::selection {
   flex-direction: column;
   align-items: center;
 }
-
 .expenseCategory,
 .expenseAmount,
 .expenseAdd,
@@ -192,7 +186,11 @@ input::selection {
   align-items: center;
   justify-content: center;
 }
-
+.expenseImage {
+  flex-direction: column;
+  position: relative;
+  margin-top: 2rem;
+}
 .expenseDate {
   height: auto;
   width: 100%;
@@ -343,8 +341,7 @@ input::-webkit-inner-spin-button {
   background-color: #fff;
   transition: all 0.3s;
 }
-
-ion-icon {
+.notePencil {
   background-color: #fff;
 }
 .middleRightBottom {
@@ -352,7 +349,6 @@ ion-icon {
   width: 100%;
   margin-top: 5px;
 }
-
 .myExpenses {
   height: 100%;
   width: auto;
@@ -361,7 +357,13 @@ ion-icon {
   margin: 15px 0 0 15px;
   cursor: default;
 }
-
+.optional {
+  position: absolute;
+  top: -25px;
+  right: 60px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
 .hr {
   width: 98%;
   border: 1px solid black;

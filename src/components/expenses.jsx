@@ -12,6 +12,7 @@ import { TailSpin } from "react-loader-spinner"
 import { useNavigate } from "react-router-dom"
 import Modal from "react-modal"
 import { FaExclamationCircle } from "react-icons/fa"
+import { PiNotePencilBold } from "react-icons/pi"
 
 function Expenses() {
   const {
@@ -33,7 +34,7 @@ function Expenses() {
     setDeleted,
     setImage,
     setPreview,
-    preview
+    preview,
   } = useContext(AppContext)
 
   Modal.setAppElement("#root")
@@ -128,21 +129,8 @@ function Expenses() {
                   onKeyPress={enterKey}
                 />
               </div>
-              <div
-                className="expenseImage"
-                style={{ position: "relative", marginTop: "2rem" }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "-20px",
-                    right: "0",
-                    fontWeight: 500,
-                    fontSize: '0.9rem'
-                  }}
-                >
-                  optional
-                </span>
+              <div className="expenseImage">
+                <span className="optional">optional</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -202,6 +190,7 @@ function Expenses() {
                     fontWeight: 500,
                     width: "100%",
                     textAlign: "left",
+                    paddingLeft: "2rem",
                   }}
                 >
                   Image Preview:
@@ -222,7 +211,7 @@ function Expenses() {
               <div className="budgetBox">
                 <span className="showBudget">Budget : ₹{amountFromDb}</span>
                 <button onClick={changeBudget} className="changeBudget">
-                  <ion-icon name="create-outline"></ion-icon>
+                  <PiNotePencilBold className="notePencil" />
                 </button>
               </div>
               <div className="remainingBox">

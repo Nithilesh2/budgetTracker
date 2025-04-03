@@ -181,7 +181,7 @@ export default function Login() {
               )}
             </button>
 
-            <div className="forgotPass">Forgot password?</div>
+            {/* <div className="forgotPass">Forgot password?</div> */}
             <div className="or">
               <hr className="hr" />
               <h4>OR</h4>
