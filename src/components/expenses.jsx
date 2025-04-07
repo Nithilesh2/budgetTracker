@@ -130,7 +130,7 @@ function Expenses() {
                   onKeyPress={enterKey}
                 />
               </div>
-              <div className="expenseImage">
+              <div className="expenseImage" style={{ marginTop: "2rem" }}>
                 <span className="optional">optional</span>
                 <input
                   type="file"
