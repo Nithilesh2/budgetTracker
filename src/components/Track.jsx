@@ -23,13 +23,11 @@ const Track = () => {
 
   const [open, setOpen] = useState(false)
   const [selectedImages, setSelectedImages] = useState([])
-  const BASE_URL = "https://budgetplanner-backend-1.onrender.com"
 
   const handleImageClick = (historyImages) => {
     const imageSlides = historyImages
       .filter((item) => item.image)
-      // .map((item) => ({ src: `http://localhost:8875/${item.image}` }))
-      .map((item) => ({ src: `${BASE_URL}/${item.image}` }))
+      .map((item) => ({ src: `${item.image}` }))
 
     setSelectedImages(imageSlides)
     setOpen(true)
@@ -198,8 +196,7 @@ const Track = () => {
                         <span className="expenseImage">
                           {firstImage ? (
                             <img
-                              // src={`http://localhost:8875/${firstImage}`}
-                              src={`${BASE_URL}/${firstImage}`}
+                              src={`${firstImage}`}
                               alt="expense"
                               width="50"
                               height="50"
